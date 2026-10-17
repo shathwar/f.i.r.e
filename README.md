@@ -25,6 +25,10 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 * **Fixed Deposits (FDs) vs. Arbitrage Funds**: Exposes the FD inflation trap (4.99% post-tax in 30% slab vs 6.5% inflation = -1.5% negative real return); positions Arbitrage Funds (12.5% LTCG) as the tax-efficient cash parking alternative.
 * **Gold & Silver**: Sovereign Gold Bonds (SGB) with 2.5% coupon + 100% tax-free capital gains at RBI maturity vs. Gold/Silver ETFs (12.5% LTCG after 24m). Sizing: 5%–10% Gold, 2%–5% Silver.
 * **Real Estate & Buy vs. Rent**: 2.0%–2.8% gross rental yields vs. financial portfolio SWR (saving ~₹1.8 Cr in required capital); 20-year Buy vs. Rent simulator; listed REITs (6.5%–7.8% yield); post-Budget 2024 Section 112 tax rules.
+* **Digital Assets & Cryptocurrencies (UK & India)**:
+  * 1%–5% asymmetric satellite sizing rule; never part of the core retirement floor or emergency fund.
+  * UK: 18%/24% CGT above £3,000 exemption, HMRC pooling, lack of ISA/SIPP wrapping.
+  * India: Flat 30% (+4% cess = 31.2%) tax under Section 115BBH, strict zero loss set-off, 1% TDS under Section 194S.
 
 ---
 
@@ -33,7 +37,7 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 ```text
 .agents/skills/fire-advisor/
 ├── SKILL.md                 # Primary advisory prompt, CFP persona, contracts & capability runbooks
-├── VERSION                  # 1.3.0
+├── VERSION                  # 1.4.0
 ├── CHANGELOG.md             # Semantic version changelog
 ├── references/
 │   ├── uk_tax_wrappers.md   # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
@@ -41,11 +45,13 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 │   ├── mortgage_vs_investing.md   # Mathematical models comparing mortgage paydown vs. investing
 │   ├── household_optimization.md  # Spousal allowances, equalizing pots, survivor shock & transfers
 │   ├── india_investments_and_tax.md # MFs, FDs, Gold, Silver, Real Estate, REITs, Old vs New, HRA
+│   ├── crypto_and_digital_assets.md # Digital assets in F.I.R.E., UK HMRC CGT, India Sec 115BBH & 194S
+│   ├── market_data_sources.md       # Primary statutory benchmarks, data lineage, spot vs CAGR
 │   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
 ├── scripts/
 │   └── fire_calculator.py   # Multi-jurisdiction CLI calculation engine (UK & India)
 └── evals/
-    └── eval_cases.json      # Comprehensive evaluation suite (14 test scenarios across UK & India)
+    └── eval_cases.json      # Comprehensive evaluation suite (16 test scenarios across UK & India)
 ```
 
 ---
@@ -69,29 +75,37 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py death-tax --pot 5
 # 4. First Death Survivor Shock (£45,000 couple spend, £10,000 DB pension)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py survivor --spend 45000 --db 10000
 
+# 5. UK Crypto CGT Calculator (£15,000 gains, £4,000 losses, Higher-rate taxpayer)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py crypto-tax \
+  --jurisdiction uk --gain 15000 --loss 4000 --bracket higher
+
 
 # --- INDIA (BHARAT) & NRI CALCULATIONS ---
 
-# 5. India Tax Regime Comparator (CTC ₹20 Lakhs, HRA, 80C, 80CCD, 80D)
+# 6. India Tax Regime Comparator (CTC ₹20 Lakhs, HRA, 80C, 80CCD, 80D)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py india-tax \
   --gross 2000000 --basic 1000000 --hra 400000 --rent 360000 --metro \
   --sec-80c 150000 --sec-80ccd 50000 --sec-80d 25000
 
-# 6. India FIRE Corpus & Monthly SIP Gap (Age 32 -> 47, ₹75k/mo spend, ₹25L portfolio)
+# 7. India FIRE Corpus & Monthly SIP Gap (Age 32 -> 47, ₹75k/mo spend, ₹25L portfolio)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py india-fire \
   --age 32 --retire-age 47 --monthly-spend 75000 --portfolio 2500000
 
-# 7. Reducing-Balance Home Loan Prepayment (₹50 Lakhs @ 8.75% for 20 yrs, extra ₹10k/mo)
+# 8. Reducing-Balance Home Loan Prepayment (₹50 Lakhs @ 8.75% for 20 yrs, extra ₹10k/mo)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py loan-prepay \
   --principal 5000000 --rate 8.75 --tenure 20 --extra-monthly 10000
 
-# 8. Money Health Score Diagnostic (0-100)
+# 9. Money Health Score Diagnostic (0-100)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py mhs \
   --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 25000000 --age 32
 
-# 9. India Asset Class Post-Tax Real Return Comparison (30% slab vs 6.5% inflation)
+# 10. India Asset Class Post-Tax Real Return Comparison (30% slab vs 6.5% inflation)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py asset-compare --tax-bracket 30
 
-# 10. Buy vs. Rent & Real Estate Capital Efficiency (₹1.5 Cr property vs ₹35k/mo rent)
+# 11. Buy vs. Rent & Real Estate Capital Efficiency (₹1.5 Cr property vs ₹35k/mo rent)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000
+
+# 12. India VDA Crypto Tax Trap (₹10L profit on BTC, ₹4L loss on ETH, 1% TDS)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py crypto-tax \
+  --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000
 ```

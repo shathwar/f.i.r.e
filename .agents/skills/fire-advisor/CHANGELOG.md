@@ -1,5 +1,30 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.4.0] - 2026-10-17
+
+### Added Digital Assets & Cryptocurrencies (Bitcoin, Ethereum):
+- **Fiduciary F.I.R.E. Principles for Digital Assets**:
+  - The **1%–5% Asymmetric Satellite Sizing Rule**: Never backs the core retirement living floor or the emergency shield.
+  - Volatility & Sequence of Returns Risk (SORR) stress-testing: Selling crypto during 50%–80% cyclical drawdowns to fund living costs leads to irreversible capital failure.
+  - "House Money" systematic rebalancing into tax-free wrappers (ISAs / Arbitrage Funds).
+- **UK Cryptoasset Tax Framework (HMRC Manual CRYPTO20000)**:
+  - Subject to Capital Gains Tax (CGT) at **18% (basic) / 24% (higher/additional)** above the £3,000 exemption.
+  - Share pooling rules (Same-day, 30-day Bed & Breakfast, Section 104 general pool).
+  - Staking / mining rewards taxed as Miscellaneous Income at marginal rates.
+  - Ineligibility for ISA or SIPP wrappers (held in taxable GIAs or cold storage).
+- **Indian Virtual Digital Assets (VDA) Tax Framework (Section 115BBH & 194S)**:
+  - **Flat 30% Tax (+4% cess = 31.2% effective)** on all gross gains, regardless of income slab or holding period.
+  - **The Strict Zero Loss Set-Off Rule**: Section 115BBH(2)(b) strictly prohibits setting off losses in one coin against gains in another coin.
+  - **Zero Loss Carry Forward & Zero Deductions**: No deductions for electricity, exchange commissions, or software.
+  - **1% TDS under Section 194S** on transfers > ₹50,000 to establish an unbroken PAN audit trail.
+- **New CLI Subcommand in `fire_calculator.py`**:
+  - `crypto-tax`: Computes exact tax, real net profit, TDS, and effective tax rates for both UK and Indian jurisdictions.
+- **Reference & Data Lineage**:
+  - Added `references/crypto_and_digital_assets.md`.
+  - Updated `references/market_data_sources.md` with CoinGecko, CoinMarketCap, CME, and FIU-IND domestic exchanges.
+- **Evals Updated**:
+  - Added test cases `eval_15` (India VDA tax trap) and `eval_16` (UK crypto CGT & portfolio sizing).
+
 ## [1.3.0] - 2026-10-17
 
 ### Added Traditional & Tangible Indian Asset Classes:

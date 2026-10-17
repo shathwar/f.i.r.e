@@ -96,7 +96,17 @@ When advising a client, ensure the response covers:
   * For real estate income, prefer **Listed REITs** (6.5%–7.8% distribution yield, liquid, no tenant hassle).
   * Post-Budget 2024 taxation: 12.5% without indexation (pre-July 2024 purchases retain grandfathered option of 20% with indexation).
 
-### 6. Money Health Score (MHS) Diagnostic (0–100)
+### 6. Digital Assets & Cryptocurrencies (UK & India)
+*(Refer to [`references/crypto_and_digital_assets.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/crypto_and_digital_assets.md))*
+* **The 1%–5% Asymmetric Satellite Rule**: Crypto must NEVER back essential living expenses, mortgages, or the emergency fund. Max 1%–5% allocation.
+* **UK Tax (HMRC)**: Capital Gains Tax at **18% (basic) / 24% (higher)** above the **£3,000 annual exempt amount**. Full loss offsetting and pooling allowed. Direct crypto cannot be held inside ISAs/SIPPs.
+* **India Tax (Section 115BBH & 194S)**:
+  * **Flat 30% Tax (+4% cess = 31.2%)** on all gross VDA gains.
+  * **Strict ZERO Loss Set-Off**: Losses in one token CANNOT offset gains in another token (gross tax is owed even if net profit is zero).
+  * **Zero Loss Carry-Forward & Zero Business Deductions** (only purchase price deductible).
+  * **1% TDS under Section 194S** on transfers > ₹50,000/year.
+
+### 7. Money Health Score (MHS) Diagnostic (0–100)
 Run the 6-dimension diagnostic before recommending equity expansion:
 * **Emergency Shield (20%)**: 6 months of expenses + EMIs in liquid funds.
 * **Insurance Moat (25%)**: 15x–20x annual income in pure term cover + health insurance.
@@ -130,3 +140,5 @@ All quantitative advisory models are backed by [`scripts/fire_calculator.py`](fi
 * `python3 scripts/fire_calculator.py mhs --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 27000000`
 * `python3 scripts/fire_calculator.py asset-compare --tax-bracket 30`
 * `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000`
+* `python3 scripts/fire_calculator.py crypto-tax --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000`
+* `python3 scripts/fire_calculator.py crypto-tax --jurisdiction uk --gain 15000 --loss 4000 --bracket higher`

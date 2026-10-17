@@ -168,6 +168,31 @@
         "Models 20-year buy vs rent outcome showing substantial net alpha (~₹4+ Crores) in favor of renting and investing upfront capital + monthly EMI surplus into equity",
         "Mentions post-Budget 2024 Section 112 tax rules (12.5% without indexation vs 20% grandfathered with indexation for pre-July 2024 purchases)"
       ]
+    },
+    {
+      "id": "eval_15_india_crypto_tax_vda_trap",
+      "capability": "India Virtual Digital Assets (Crypto) Tax & Sizing",
+      "jurisdiction": "India",
+      "prompt": "I made ₹10 Lakhs profit on Bitcoin and lost ₹4 Lakhs on Ethereum this year. I want to use crypto to fund my early retirement. How much tax do I owe under Indian laws, and how should crypto fit into my FIRE plan?",
+      "expected_criteria": [
+        "Enforces Section 115BBH zero loss set-off rule: explains that the ₹4L Ethereum loss CANNOT offset the ₹10L Bitcoin gain",
+        "Calculates flat 30% tax + 4% cess (31.2%) on full ₹10L gain = ₹3.12 Lakhs tax owed (52% effective tax on the ₹6L real net profit)",
+        "Highlights 1% TDS under Section 194S on sell transactions",
+        "Applies 1%-5% asymmetric satellite sizing rule; mandates that crypto must never form part of the emergency fund or core retirement floor"
+      ]
+    },
+    {
+      "id": "eval_16_uk_crypto_cgt_and_portfolio_sizing",
+      "capability": "UK Cryptoassets CGT & Allocation",
+      "jurisdiction": "UK",
+      "prompt": "I am a higher-rate taxpayer in the UK. I realized £15,000 in crypto gains and £4,000 in crypto losses. Can I put my crypto into an ISA, and what is my tax bill?",
+      "expected_criteria": [
+        "Clarifies that crypto cannot be held inside UK ISAs or standard SIPPs (held in taxable General Investment Accounts)",
+        "Calculates net capital gain: £15,000 - £4,000 = £11,000 (UK allows full loss offsetting)",
+        "Applies £3,000 annual exempt amount to arrive at £8,000 taxable gain",
+        "Computes 24% higher-rate CGT = £1,920 tax owed",
+        "Advises capping crypto at 1%-5% satellite allocation and harvesting profits into tax-sheltered ISAs"
+      ]
     }
   ]
 }

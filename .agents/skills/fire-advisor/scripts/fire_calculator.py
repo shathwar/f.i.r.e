@@ -625,6 +625,13 @@ def calculate_india_asset_returns(tax_bracket: str = "30", inflation: float = 0.
             "tax_treatment": "Blended distribution tax (~20 percent effective) + 12.5 percent LTCG on units",
             "post_tax_cagr_pct": round((7.2 * 0.80) + (3.3 * (1.0 - 0.125)), 2),
             "role_in_fire": "Fractional liquid commercial real estate income stream."
+        },
+        {
+            "asset": "Digital Currencies / Bitcoin (Satellite)",
+            "nominal_cagr_pct": 20.00,
+            "tax_treatment": "Flat 31.2 percent tax (Sec 115BBH) with ZERO loss set-off",
+            "post_tax_cagr_pct": round(20.00 * (1.0 - 0.312), 2),
+            "role_in_fire": "High volatility asymmetric satellite (1-5 percent max). NEVER in emergency fund."
         }
     ]
 
@@ -641,7 +648,8 @@ def calculate_india_asset_returns(tax_bracket: str = "30", inflation: float = 0.
         "key_takeaways": [
             "Fixed Deposits guarantee a NEGATIVE real return (-1.5 percent) in high tax brackets; use Arbitrage Funds instead for cash buffers.",
             "Gold SGB delivers the highest post-tax risk-adjusted return among debt/hedges due to 100 percent tax-free capital gains on maturity.",
-            "Residential real estate rental yield (1.8-2.2 percent net) locks up ~50 percent more capital than an equity/REIT financial independence portfolio."
+            "Residential real estate rental yield (1.8-2.2 percent net) locks up ~50 percent more capital than an equity/REIT financial independence portfolio.",
+            "Crypto is taxed at flat 31.2 percent in India with zero loss set-off, making it suitable only as a disciplined 1-5 percent satellite."
         ]
     }
 
@@ -724,6 +732,67 @@ def calculate_buy_vs_rent_real_estate(property_price: float, monthly_rent: float
             "excess_capital_locked_in_property": round(capital_needed_real_estate - capital_needed_fire_portfolio, 2)
         }
     }
+
+
+def calculate_crypto_tax(jurisdiction: str, gain: float, loss: float = 0.0,
+                         transfer_value: float = 0.0, tax_bracket: str = "higher") -> Dict[str, Any]:
+    """Computes statutory crypto / Virtual Digital Asset tax for UK or India."""
+    jurisdiction = jurisdiction.lower().strip()
+    if transfer_value <= 0:
+        transfer_value = gain
+
+    if jurisdiction in ["india", "in", "bharat"]:
+        gross_taxable_gain = max(0.0, gain)
+        statutory_tax = gross_taxable_gain * 0.312
+        net_economic_profit = gain - loss
+        tds_194s = transfer_value * 0.01 if transfer_value >= 50000.0 else 0.0
+        effective_tax = (statutory_tax / net_economic_profit * 100.0) if net_economic_profit > 0 else "N/A (Loss or breakeven, but tax is strictly owed on gross gains!)"
+
+        return {
+            "jurisdiction": "India (Section 115BBH & Section 194S)",
+            "gross_crypto_gains": round(gain, 2),
+            "reported_crypto_losses": round(loss, 2),
+            "net_economic_profit": round(net_economic_profit, 2),
+            "statutory_tax_rate": "Flat 30 percent + 4 percent Cess = 31.2 percent",
+            "statutory_tax_owed": round(statutory_tax, 2),
+            "tds_deducted_at_source_sec_194s (1 percent)": round(tds_194s, 2),
+            "net_post_tax_in_hand": round(net_economic_profit - statutory_tax, 2),
+            "effective_tax_rate_on_real_profit_pct": round(effective_tax, 1) if isinstance(effective_tax, float) else effective_tax,
+            "critical_statutory_rules": [
+                "Section 115BBH(2)(b): Losses in one token/coin CANNOT be set off against gains in another token.",
+                "Zero loss carry forward: Unabsorbed VDA losses expire at the end of the financial year.",
+                "Zero business deductions: No deduction permitted for electricity, exchange fees, trading software, or internet.",
+                "Section 194S: 1 percent TDS applies on all transfers > ₹50,000/year to establish an unbroken PAN audit trail."
+            ],
+            "fiduciary_fire_verdict": "Due to 31.2 percent flat tax without loss set-off, crypto is severely tax-penalized in India. Limit to 1-3 percent max satellite allocation."
+        }
+    else:
+        cgt_rate = 0.18 if tax_bracket.lower() in ["basic", "standard"] else 0.24
+        net_gain = gain - loss
+        annual_exemption = 3000.0
+        taxable_gain = max(0.0, net_gain - annual_exemption)
+        cgt_owed = taxable_gain * cgt_rate
+        unabsorbed_loss = max(0.0, loss - gain)
+
+        return {
+            "jurisdiction": "United Kingdom (HMRC Cryptoassets Manual)",
+            "gross_crypto_gains": round(gain, 2),
+            "crypto_losses_offset": round(min(gain, loss), 2),
+            "net_capital_gain": round(net_gain, 2),
+            "cgt_annual_exempt_amount": annual_exemption,
+            "taxable_gain": round(taxable_gain, 2),
+            "marginal_cgt_rate_percent": cgt_rate * 100,
+            "cgt_tax_owed": round(cgt_owed, 2),
+            "net_post_tax_in_hand": round(net_gain - cgt_owed, 2),
+            "unabsorbed_loss_carried_forward": round(unabsorbed_loss, 2),
+            "critical_statutory_rules": [
+                "HMRC Pooling Rules: Same-day rule, 30-day 'Bed & Breakfast' rule, and Section 104 blended cost pool apply.",
+                "Loss offset allowed: Crypto losses offset other capital gains and carry forward indefinitely if reported within 4 years.",
+                "No ISA/SIPP wrapping: Direct crypto cannot be held inside tax-sheltered ISA or SIPP wrappers.",
+                "Staking & mining: Taxed as Miscellaneous Income (20 percent/40 percent/45 percent) upon receipt, then CGT on disposal."
+            ],
+            "fiduciary_fire_verdict": "Unlike India, UK allows full loss offsetting and £3,000 exemption, but lack of ISA shielding limits crypto to a 1-5 percent satellite asset."
+        }
 
 
 # ==============================================================================
@@ -848,6 +917,14 @@ def main():
     p_re.add_argument("--equity-cagr", type=float, default=0.12, help="Expected equity CAGR (default 0.12)")
     p_re.add_argument("--prop-cagr", type=float, default=0.06, help="Expected property appreciation (default 0.06)")
 
+    # Crypto Tax Calculator (UK & India)
+    p_crypto = subparsers.add_parser("crypto-tax", help="Calculate crypto/VDA statutory tax for UK or India")
+    p_crypto.add_argument("--jurisdiction", type=str, required=True, choices=["uk", "india", "in", "bharat"], help="Tax jurisdiction")
+    p_crypto.add_argument("--gain", type=float, required=True, help="Gross capital gains on profitable tokens")
+    p_crypto.add_argument("--loss", type=float, default=0.0, help="Losses incurred on losing tokens")
+    p_crypto.add_argument("--transfer-value", type=float, default=0.0, help="Total transaction / sale value for TDS")
+    p_crypto.add_argument("--bracket", type=str, default="higher", choices=["basic", "higher"], help="UK tax bracket")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -892,6 +969,8 @@ def main():
     elif args.command == "real-estate-eval":
         res = calculate_buy_vs_rent_real_estate(args.price, args.rent, args.loan_rate, args.tenure,
                                                 args.equity_cagr, args.prop_cagr)
+    elif args.command == "crypto-tax":
+        res = calculate_crypto_tax(args.jurisdiction, args.gain, args.loss, args.transfer_value, args.bracket)
 
     print(json.dumps(res, indent=2))
 
