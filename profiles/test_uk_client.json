@@ -12,42 +12,62 @@
     "cash_and_emergency": [
       {
         "name": "Emergency Cash Account",
-        "amount": 20000.0
+        "amount": 20000.0,
+        "source": "Marcus by Goldman Sachs",
+        "account_id": "MC-8849201",
+        "portal_url": "https://www.marcus.co.uk"
       }
     ],
     "isas": [
       {
         "name": "Stocks and Shares ISA",
-        "amount": 100000.0
+        "amount": 100000.0,
+        "source": "Vanguard Investor UK",
+        "account_id": "VG-100984",
+        "isin": "GB00BD3RZ582",
+        "portal_url": "https://www.vanguardinvestor.co.uk"
       }
     ],
     "pensions": [
       {
         "name": "SIPP",
-        "amount": 150000.0
+        "amount": 150000.0,
+        "source": "Interactive Investor (ii)",
+        "account_id": "SIPP-ii-94821",
+        "portal_url": "https://www.ii.co.uk"
       },
       {
         "name": "Workplace DC Pension",
-        "amount": 75000.0
+        "amount": 75000.0,
+        "source": "Aviva MyWorkplace",
+        "policy_id": "AV-489201",
+        "portal_url": "https://www.aviva.co.uk/workplace"
       }
     ],
     "gias": [
       {
         "name": "General Investment Account",
-        "amount": 25000.0
+        "amount": 25000.0,
+        "source": "Hargreaves Lansdown",
+        "account_id": "HL-GIA-3910",
+        "portal_url": "https://www.hl.co.uk"
       }
     ],
     "digital_assets": [
       {
         "name": "Bitcoin",
-        "amount": 5000.0
+        "amount": 5000.0,
+        "source": "Trezor Safe 3 Hardware Wallet",
+        "tracking_label": "Vault 1"
       }
     ],
     "real_estate": [
       {
         "name": "Primary Residence",
         "amount": 450000.0,
-        "is_primary": true
+        "is_primary": true,
+        "source": "HM Land Registry Title Deed",
+        "title_number": "NGL849210"
       }
     ]
   },
@@ -56,12 +76,17 @@
       "name": "Residential Mortgage",
       "principal_outstanding": 220000.0,
       "interest_rate": 0.045,
-      "monthly_emi": 1250.0
+      "monthly_emi": 1250.0,
+      "source": "NatWest Mortgage Services",
+      "mortgage_account_id": "NW-MTG-88912",
+      "portal_url": "https://www.natwest.com"
     }
   ],
   "protection": {
     "term_insurance_cover": 1000000.0,
     "has_health_insurance": true,
-    "has_revolving_credit_card_debt": false
+    "has_revolving_credit_card_debt": false,
+    "term_insurance_source": "Legal & General Life (Policy #LG-489201)",
+    "health_insurance_source": "Bupa Corporate Scheme"
   }
 }

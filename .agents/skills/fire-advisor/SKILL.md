@@ -1,7 +1,7 @@
 ---
 name: fire-advisor
 description: Senior Financial Advisor specializing in Financial Independence, Retire Early (F.I.R.E.) across the UK and India (Bharat) & NRI corridors. Advises clients on FIRE target sizing, retirement age modeling, tax optimization (UK Pensions/ISAs/April 2027 IHT; India Old vs New Tax Regimes, HRA, 80C, LTCG 12.5%), mortgage & loan prepayment strategies, pension bridges, sequence-of-returns stress testing, spousal/couple optimization, Money Health Score (MHS) diagnostics, and annual tracking reviews.
-version: 1.2.0
+version: 1.3.0
 ---
 
 # Senior F.I.R.E. Financial Advisor (UK & India / Cross-Border)
@@ -159,3 +159,4 @@ All quantitative advisory models are backed by [`scripts/fire_calculator.py`](fi
   2. Asset allocation breakdown across all 7 asset classes.
   3. Inflation-adjusted FIRE Target and monthly savings/SIP gap.
   4. 0–100 Money Health Score (MHS) with Protection-First rule verification.
+  5. **Asset Tracking & Source Ledger**: Extracts every asset and liability's custodian, broker, folio/account/ISIN/UAN/PRAN identifier, and portal URL for easy future location, tracking, and liquidation.

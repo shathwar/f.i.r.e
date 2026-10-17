@@ -14,69 +14,101 @@
       {
         "name": "Bank Fixed Deposit",
         "amount": 500000.0,
-        "rate": 0.0725
+        "rate": 0.0725,
+        "source": "State Bank of India (SBI YONO)",
+        "account_id": "FD-984729184",
+        "portal_url": "https://retail.onlinesbi.sbi"
       },
       {
         "name": "Arbitrage Mutual Fund",
         "amount": 300000.0,
-        "rate": 0.07
+        "rate": 0.07,
+        "source": "Zerodha Coin / CAMS",
+        "folio_number": "1849204/92",
+        "portal_url": "https://coin.zerodha.com"
       }
     ],
     "equities": [
       {
         "name": "Nifty 50 Index Fund",
         "amount": 2000000.0,
-        "expected_cagr": 0.12
+        "expected_cagr": 0.12,
+        "source": "Kuvera / CAMS",
+        "folio_number": "UTI-8924719",
+        "isin": "INF209K01167"
       },
       {
         "name": "Flexi Cap Fund",
         "amount": 1000000.0,
-        "expected_cagr": 0.12
+        "expected_cagr": 0.12,
+        "source": "Groww / KFintech",
+        "folio_number": "PPFAS-559102",
+        "isin": "INF879O01019"
       }
     ],
     "pensions_and_retirement": [
       {
         "name": "EPF Balance",
         "amount": 1000000.0,
-        "rate": 0.0825
+        "rate": 0.0825,
+        "source": "EPFO Member Portal",
+        "uan": "100984721940",
+        "portal_url": "https://unifiedportal-mem.epfindia.gov.in"
       },
       {
         "name": "PPF",
         "amount": 400000.0,
-        "rate": 0.071
+        "rate": 0.071,
+        "source": "SBI Koramangala Branch",
+        "account_id": "PPF-309482109",
+        "portal_url": "https://retail.onlinesbi.sbi"
       },
       {
         "name": "NPS Tier 1",
-        "amount": 250000.0
+        "amount": 250000.0,
+        "source": "Protean CRA (NSDL)",
+        "pran": "110098472109",
+        "portal_url": "https://cra-nsdl.com"
       }
     ],
     "precious_metals": [
       {
         "name": "Sovereign Gold Bonds (SGB)",
-        "amount": 350000.0
+        "amount": 350000.0,
+        "source": "RBI Retail Direct / Zerodha Demat",
+        "isin_or_certificate": "IN0020200270 (SGB 2028 Series)",
+        "portal_url": "https://rbiretaildirect.org.in"
       },
       {
         "name": "Silver ETF",
-        "amount": 75000.0
+        "amount": 75000.0,
+        "source": "Zerodha Kite",
+        "ticker": "SILVERBEES.NS"
       }
     ],
     "real_estate": [
       {
         "name": "Self-occupied Apartment",
         "amount": 12000000.0,
-        "is_primary": true
+        "is_primary": true,
+        "source": "Sub-Registrar Office Indiranagar / Title Deed",
+        "property_id": "BBMP Khata #8921/42A"
       },
       {
         "name": "Listed REIT Units",
         "amount": 250000.0,
-        "distribution_yield": 0.072
+        "distribution_yield": 0.072,
+        "source": "Zerodha Demat",
+        "ticker": "NXST.NS"
       }
     ],
     "digital_assets": [
       {
         "name": "Bitcoin (Cold Storage)",
         "amount": 200000.0,
-        "cost_basis": 120000.0
+        "cost_basis": 120000.0,
+        "source": "Ledger Nano X Hardware Wallet (Cold Storage)",
+        "tracking_label": "HODL Vault 1"
       }
     ]
   },
@@ -86,12 +118,17 @@
       "principal_outstanding": 4000000.0,
       "interest_rate": 0.0875,
       "remaining_tenure_years": 18,
-      "monthly_emi": 36500.0
+      "monthly_emi": 36500.0,
+      "source": "State Bank of India Home Finance",
+      "loan_account_id": "HL-9982341209",
+      "portal_url": "https://homeloans.sbi"
     }
   ],
   "protection": {
     "term_insurance_cover": 25000000.0,
     "has_health_insurance": true,
-    "has_revolving_credit_card_debt": false
+    "has_revolving_credit_card_debt": false,
+    "term_insurance_source": "HDFC Life Click2Protect (Policy #9847120)",
+    "health_insurance_source": "Care Health Supreme (Policy #CH-389102)"
   }
 }

@@ -18,9 +18,9 @@ The user can specify their preferred local directory or file path at any time:
 
 ---
 
-## 2. Standard Client Profile Schema (JSON)
+## 2. Standard Client Profile Schema with Source Tracking
 
-Each client profile captures full balance sheet details, income, expenses, and protection parameters across both **UK** and **India / NRI** jurisdictions.
+Each client profile captures full balance sheet details, income, expenses, protection parameters, and **explicit institution/source tracking metadata** for every asset and liability.
 
 ### Example: India / NRI Profile (`client_anita_india.json`)
 ```json
@@ -37,28 +37,107 @@ Each client profile captures full balance sheet details, income, expenses, and p
   },
   "assets": {
     "cash_and_emergency": [
-      {"name": "SBI Savings & FD", "type": "fd", "amount": 600000, "rate": 0.0725},
-      {"name": "Tata Arbitrage Fund", "type": "arbitrage", "amount": 400000, "rate": 0.07}
+      {
+        "name": "SBI Savings & FD",
+        "type": "fd",
+        "amount": 600000,
+        "rate": 0.0725,
+        "source": "State Bank of India (SBI YONO)",
+        "account_id": "FD-984729184",
+        "portal_url": "https://retail.onlinesbi.sbi"
+      },
+      {
+        "name": "Tata Arbitrage Fund",
+        "type": "arbitrage",
+        "amount": 400000,
+        "rate": 0.07,
+        "source": "Zerodha Coin / CAMS",
+        "folio_number": "1849204/92",
+        "portal_url": "https://coin.zerodha.com"
+      }
     ],
     "equities": [
-      {"name": "UTI Nifty 50 Index Fund", "amount": 2500000, "expected_cagr": 0.12},
-      {"name": "Parag Parikh Flexi Cap Fund", "amount": 1500000, "expected_cagr": 0.12}
+      {
+        "name": "UTI Nifty 50 Index Fund",
+        "amount": 2500000,
+        "expected_cagr": 0.12,
+        "source": "Kuvera / CAMS",
+        "folio_number": "UTI-8924719",
+        "isin": "INF209K01167"
+      },
+      {
+        "name": "Parag Parikh Flexi Cap Fund",
+        "amount": 1500000,
+        "expected_cagr": 0.12,
+        "source": "Groww / KFintech",
+        "folio_number": "PPFAS-559102",
+        "isin": "INF879O01019"
+      }
     ],
     "pensions_and_retirement": [
-      {"name": "EPF Balance", "amount": 1200000, "rate": 0.0825},
-      {"name": "PPF", "amount": 500000, "rate": 0.071},
-      {"name": "NPS Tier 1", "amount": 350000}
+      {
+        "name": "EPF Balance",
+        "amount": 1200000,
+        "rate": 0.0825,
+        "source": "EPFO Member Portal",
+        "uan": "100984721940",
+        "portal_url": "https://unifiedportal-mem.epfindia.gov.in"
+      },
+      {
+        "name": "PPF",
+        "amount": 500000,
+        "rate": 0.071,
+        "source": "SBI Koramangala Branch",
+        "account_id": "PPF-309482109",
+        "portal_url": "https://retail.onlinesbi.sbi"
+      },
+      {
+        "name": "NPS Tier 1",
+        "amount": 350000,
+        "source": "Protean CRA (NSDL)",
+        "pran": "110098472109",
+        "portal_url": "https://cra-nsdl.com"
+      }
     ],
     "precious_metals": [
-      {"name": "Sovereign Gold Bonds (SGB)", "amount": 450000},
-      {"name": "Silver ETF", "amount": 100000}
+      {
+        "name": "Sovereign Gold Bonds (SGB)",
+        "amount": 450000,
+        "source": "RBI Retail Direct / Zerodha Demat",
+        "isin_or_certificate": "IN0020200270 (SGB 2028 Series)",
+        "portal_url": "https://rbiretaildirect.org.in"
+      },
+      {
+        "name": "Silver ETF",
+        "amount": 100000,
+        "source": "Zerodha Kite",
+        "ticker": "SILVERBEES.NS"
+      }
     ],
     "real_estate": [
-      {"name": "Primary 3BHK Apartment", "amount": 15000000, "is_primary": true},
-      {"name": "Nexus Select REIT", "amount": 300000, "distribution_yield": 0.075}
+      {
+        "name": "Primary 3BHK Apartment",
+        "amount": 15000000,
+        "is_primary": true,
+        "source": "Sub-Registrar Office Indiranagar / Title Deed",
+        "property_id": "BBMP Khata #8921/42A"
+      },
+      {
+        "name": "Nexus Select REIT",
+        "amount": 300000,
+        "distribution_yield": 0.075,
+        "source": "Zerodha Demat",
+        "ticker": "NXST.NS"
+      }
     ],
     "digital_assets": [
-      {"name": "Bitcoin (Cold Storage)", "amount": 400000, "cost_basis": 200000}
+      {
+        "name": "Bitcoin (Cold Storage)",
+        "amount": 400000,
+        "cost_basis": 200000,
+        "source": "Ledger Nano X Hardware Wallet (Cold Storage)",
+        "tracking_label": "HODL Vault 1"
+      }
     ]
   },
   "liabilities": [
@@ -67,13 +146,17 @@ Each client profile captures full balance sheet details, income, expenses, and p
       "principal_outstanding": 4800000,
       "interest_rate": 0.0875,
       "remaining_tenure_years": 18,
-      "monthly_emi": 43500
+      "monthly_emi": 43500,
+      "source": "State Bank of India Home Finance",
+      "loan_account_id": "HL-9982341209"
     }
   ],
   "protection": {
     "term_insurance_cover": 30000000,
     "has_health_insurance": true,
-    "has_revolving_credit_card_debt": false
+    "has_revolving_credit_card_debt": false,
+    "term_insurance_source": "HDFC Life Click2Protect (Policy #9847120)",
+    "health_insurance_source": "Care Health Supreme (Policy #CH-389102)"
   }
 }
 ```
@@ -92,23 +175,59 @@ Each client profile captures full balance sheet details, income, expenses, and p
   },
   "assets": {
     "cash_and_emergency": [
-      {"name": "Marcus Easy Access", "amount": 25000}
+      {
+        "name": "Marcus Easy Access",
+        "amount": 25000,
+        "source": "Marcus by Goldman Sachs",
+        "account_id": "MC-8849201"
+      }
     ],
     "isas": [
-      {"name": "Vanguard FTSE Global All Cap ISA", "amount": 190000}
+      {
+        "name": "Vanguard FTSE Global All Cap ISA",
+        "amount": 190000,
+        "source": "Vanguard Investor UK",
+        "account_id": "VG-100984",
+        "isin": "GB00BD3RZ582"
+      }
     ],
     "pensions": [
-      {"name": "SIPP (Interactive Investor)", "amount": 340000},
-      {"name": "Workplace DC Pension", "amount": 160000}
+      {
+        "name": "SIPP (Interactive Investor)",
+        "amount": 340000,
+        "source": "Interactive Investor (ii)",
+        "account_id": "SIPP-ii-94821"
+      },
+      {
+        "name": "Workplace DC Pension",
+        "amount": 160000,
+        "source": "Aviva MyWorkplace",
+        "policy_id": "AV-489201"
+      }
     ],
     "gias": [
-      {"name": "Taxable GIA", "amount": 35000}
+      {
+        "name": "Taxable GIA",
+        "amount": 35000,
+        "source": "Hargreaves Lansdown",
+        "account_id": "HL-GIA-3910"
+      }
     ],
     "digital_assets": [
-      {"name": "Bitcoin", "amount": 15000}
+      {
+        "name": "Bitcoin",
+        "amount": 15000,
+        "source": "Trezor Safe 3 Hardware Wallet"
+      }
     ],
     "real_estate": [
-      {"name": "Main Residence", "amount": 600000, "is_primary": true}
+      {
+        "name": "Main Residence",
+        "amount": 600000,
+        "is_primary": true,
+        "source": "HM Land Registry Title Deed",
+        "title_number": "NGL849210"
+      }
     ]
   },
   "liabilities": [
@@ -116,13 +235,17 @@ Each client profile captures full balance sheet details, income, expenses, and p
       "name": "Residential Mortgage",
       "principal_outstanding": 175000,
       "interest_rate": 0.045,
-      "monthly_emi": 1100
+      "monthly_emi": 1100,
+      "source": "NatWest Mortgage Services",
+      "mortgage_account_id": "NW-MTG-88912"
     }
   ],
   "protection": {
     "term_insurance_cover": 1500000,
     "has_health_insurance": true,
-    "has_revolving_credit_card_debt": false
+    "has_revolving_credit_card_debt": false,
+    "term_insurance_source": "Legal & General Life (Policy #LG-489201)",
+    "health_insurance_source": "Bupa Corporate Scheme"
   }
 }
 ```

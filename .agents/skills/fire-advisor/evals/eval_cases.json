@@ -205,6 +205,18 @@
         "Demonstrates profile-template, profile-list, and profile-eval CLI commands with custom file paths",
         "Executes a holistic balance sheet diagnostic (liquid financial wealth, net worth, allocation %, FIRE target gap, and Money Health Score)"
       ]
+    },
+    {
+      "id": "eval_18_asset_source_tracking_and_ledger",
+      "capability": "Asset Source Tracking & Audit Ledger",
+      "jurisdiction": "Multi-Jurisdiction",
+      "prompt": "I want to make sure every single asset in my profile captures its custodian, broker, account or folio number, and login portal so I can easily locate and track them later. How does the FIRE Advisor support asset source tracking?",
+      "expected_criteria": [
+        "Verifies that each asset entry contains explicit source metadata: custodian/broker platform, unique account/folio/ISIN/UAN/PRAN identifier, and portal URL",
+        "Generates an Asset Tracking & Source Ledger during profile evaluation aggregating all assets and liabilities",
+        "Validates source tracking across all categories (Cash/FDs, Equities/MFs, Pensions/EPF/SIPP, Gold/SGB, Real Estate, Crypto, Home Loans, and Term/Health Insurance)",
+        "Maintains complete local data privacy while providing an immediate audit trail for the client"
+      ]
     }
   ]
 }

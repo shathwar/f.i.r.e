@@ -835,23 +835,65 @@ def generate_profile_template(jurisdiction: str = "india", output_path: Optional
             },
             "assets": {
                 "cash_and_emergency": [
-                    {"name": "Emergency Cash Account", "amount": 20000.0}
+                    {
+                        "name": "Emergency Cash Account",
+                        "amount": 20000.0,
+                        "source": "Marcus by Goldman Sachs",
+                        "account_id": "MC-8849201",
+                        "portal_url": "https://www.marcus.co.uk"
+                    }
                 ],
                 "isas": [
-                    {"name": "Stocks and Shares ISA", "amount": 100000.0}
+                    {
+                        "name": "Stocks and Shares ISA",
+                        "amount": 100000.0,
+                        "source": "Vanguard Investor UK",
+                        "account_id": "VG-100984",
+                        "isin": "GB00BD3RZ582",
+                        "portal_url": "https://www.vanguardinvestor.co.uk"
+                    }
                 ],
                 "pensions": [
-                    {"name": "SIPP", "amount": 150000.0},
-                    {"name": "Workplace DC Pension", "amount": 75000.0}
+                    {
+                        "name": "SIPP",
+                        "amount": 150000.0,
+                        "source": "Interactive Investor (ii)",
+                        "account_id": "SIPP-ii-94821",
+                        "portal_url": "https://www.ii.co.uk"
+                    },
+                    {
+                        "name": "Workplace DC Pension",
+                        "amount": 75000.0,
+                        "source": "Aviva MyWorkplace",
+                        "policy_id": "AV-489201",
+                        "portal_url": "https://www.aviva.co.uk/workplace"
+                    }
                 ],
                 "gias": [
-                    {"name": "General Investment Account", "amount": 25000.0}
+                    {
+                        "name": "General Investment Account",
+                        "amount": 25000.0,
+                        "source": "Hargreaves Lansdown",
+                        "account_id": "HL-GIA-3910",
+                        "portal_url": "https://www.hl.co.uk"
+                    }
                 ],
                 "digital_assets": [
-                    {"name": "Bitcoin", "amount": 5000.0}
+                    {
+                        "name": "Bitcoin",
+                        "amount": 5000.0,
+                        "source": "Trezor Safe 3 Hardware Wallet",
+                        "tracking_label": "Vault 1"
+                    }
                 ],
                 "real_estate": [
-                    {"name": "Primary Residence", "amount": 450000.0, "is_primary": True}
+                    {
+                        "name": "Primary Residence",
+                        "amount": 450000.0,
+                        "is_primary": True,
+                        "source": "HM Land Registry Title Deed",
+                        "title_number": "NGL849210"
+                    }
                 ]
             },
             "liabilities": [
@@ -859,13 +901,18 @@ def generate_profile_template(jurisdiction: str = "india", output_path: Optional
                     "name": "Residential Mortgage",
                     "principal_outstanding": 220000.0,
                     "interest_rate": 0.045,
-                    "monthly_emi": 1250.0
+                    "monthly_emi": 1250.0,
+                    "source": "NatWest Mortgage Services",
+                    "mortgage_account_id": "NW-MTG-88912",
+                    "portal_url": "https://www.natwest.com"
                 }
             ],
             "protection": {
                 "term_insurance_cover": 1000000.0,
                 "has_health_insurance": True,
-                "has_revolving_credit_card_debt": False
+                "has_revolving_credit_card_debt": False,
+                "term_insurance_source": "Legal & General Life (Policy #LG-489201)",
+                "health_insurance_source": "Bupa Corporate Scheme"
             }
         }
     else:
@@ -882,28 +929,105 @@ def generate_profile_template(jurisdiction: str = "india", output_path: Optional
             },
             "assets": {
                 "cash_and_emergency": [
-                    {"name": "Bank Fixed Deposit", "amount": 500000.0, "rate": 0.0725},
-                    {"name": "Arbitrage Mutual Fund", "amount": 300000.0, "rate": 0.07}
+                    {
+                        "name": "Bank Fixed Deposit",
+                        "amount": 500000.0,
+                        "rate": 0.0725,
+                        "source": "State Bank of India (SBI YONO)",
+                        "account_id": "FD-984729184",
+                        "portal_url": "https://retail.onlinesbi.sbi"
+                    },
+                    {
+                        "name": "Arbitrage Mutual Fund",
+                        "amount": 300000.0,
+                        "rate": 0.07,
+                        "source": "Zerodha Coin / CAMS",
+                        "folio_number": "1849204/92",
+                        "portal_url": "https://coin.zerodha.com"
+                    }
                 ],
                 "equities": [
-                    {"name": "Nifty 50 Index Fund", "amount": 2000000.0, "expected_cagr": 0.12},
-                    {"name": "Flexi Cap Fund", "amount": 1000000.0, "expected_cagr": 0.12}
+                    {
+                        "name": "Nifty 50 Index Fund",
+                        "amount": 2000000.0,
+                        "expected_cagr": 0.12,
+                        "source": "Kuvera / CAMS",
+                        "folio_number": "UTI-8924719",
+                        "isin": "INF209K01167"
+                    },
+                    {
+                        "name": "Flexi Cap Fund",
+                        "amount": 1000000.0,
+                        "expected_cagr": 0.12,
+                        "source": "Groww / KFintech",
+                        "folio_number": "PPFAS-559102",
+                        "isin": "INF879O01019"
+                    }
                 ],
                 "pensions_and_retirement": [
-                    {"name": "EPF Balance", "amount": 1000000.0, "rate": 0.0825},
-                    {"name": "PPF", "amount": 400000.0, "rate": 0.071},
-                    {"name": "NPS Tier 1", "amount": 250000.0}
+                    {
+                        "name": "EPF Balance",
+                        "amount": 1000000.0,
+                        "rate": 0.0825,
+                        "source": "EPFO Member Portal",
+                        "uan": "100984721940",
+                        "portal_url": "https://unifiedportal-mem.epfindia.gov.in"
+                    },
+                    {
+                        "name": "PPF",
+                        "amount": 400000.0,
+                        "rate": 0.071,
+                        "source": "SBI Koramangala Branch",
+                        "account_id": "PPF-309482109",
+                        "portal_url": "https://retail.onlinesbi.sbi"
+                    },
+                    {
+                        "name": "NPS Tier 1",
+                        "amount": 250000.0,
+                        "source": "Protean CRA (NSDL)",
+                        "pran": "110098472109",
+                        "portal_url": "https://cra-nsdl.com"
+                    }
                 ],
                 "precious_metals": [
-                    {"name": "Sovereign Gold Bonds (SGB)", "amount": 350000.0},
-                    {"name": "Silver ETF", "amount": 75000.0}
+                    {
+                        "name": "Sovereign Gold Bonds (SGB)",
+                        "amount": 350000.0,
+                        "source": "RBI Retail Direct / Zerodha Demat",
+                        "isin_or_certificate": "IN0020200270 (SGB 2028 Series)",
+                        "portal_url": "https://rbiretaildirect.org.in"
+                    },
+                    {
+                        "name": "Silver ETF",
+                        "amount": 75000.0,
+                        "source": "Zerodha Kite",
+                        "ticker": "SILVERBEES.NS"
+                    }
                 ],
                 "real_estate": [
-                    {"name": "Self-occupied Apartment", "amount": 12000000.0, "is_primary": True},
-                    {"name": "Listed REIT Units", "amount": 250000.0, "distribution_yield": 0.072}
+                    {
+                        "name": "Self-occupied Apartment",
+                        "amount": 12000000.0,
+                        "is_primary": True,
+                        "source": "Sub-Registrar Office Indiranagar / Title Deed",
+                        "property_id": "BBMP Khata #8921/42A"
+                    },
+                    {
+                        "name": "Listed REIT Units",
+                        "amount": 250000.0,
+                        "distribution_yield": 0.072,
+                        "source": "Zerodha Demat",
+                        "ticker": "NXST.NS"
+                    }
                 ],
                 "digital_assets": [
-                    {"name": "Bitcoin (Cold Storage)", "amount": 200000.0, "cost_basis": 120000.0}
+                    {
+                        "name": "Bitcoin (Cold Storage)",
+                        "amount": 200000.0,
+                        "cost_basis": 120000.0,
+                        "source": "Ledger Nano X Hardware Wallet (Cold Storage)",
+                        "tracking_label": "HODL Vault 1"
+                    }
                 ]
             },
             "liabilities": [
@@ -912,13 +1036,18 @@ def generate_profile_template(jurisdiction: str = "india", output_path: Optional
                     "principal_outstanding": 4000000.0,
                     "interest_rate": 0.0875,
                     "remaining_tenure_years": 18,
-                    "monthly_emi": 36500.0
+                    "monthly_emi": 36500.0,
+                    "source": "State Bank of India Home Finance",
+                    "loan_account_id": "HL-9982341209",
+                    "portal_url": "https://homeloans.sbi"
                 }
             ],
             "protection": {
                 "term_insurance_cover": 25000000.0,
                 "has_health_insurance": True,
-                "has_revolving_credit_card_debt": False
+                "has_revolving_credit_card_debt": False,
+                "term_insurance_source": "HDFC Life Click2Protect (Policy #9847120)",
+                "health_insurance_source": "Care Health Supreme (Policy #CH-389102)"
             }
         }
 
@@ -1087,6 +1216,46 @@ def evaluate_profile(file_path: str, inflation: float = 0.065, swr: float = 0.03
 
     currency_sym = "£" if jurisdiction in ["uk", "gb"] else "₹"
 
+    # Build Asset Tracking & Source Ledger
+    tracking_ledger = []
+    for cat_name, cat_items in assets.items():
+        if not isinstance(cat_items, list):
+            continue
+        for itm in cat_items:
+            ident = (
+                itm.get("account_id") or itm.get("folio_number") or itm.get("isin") or
+                itm.get("isin_or_certificate") or itm.get("ticker") or itm.get("property_id") or
+                itm.get("title_number") or itm.get("policy_id") or itm.get("uan") or
+                itm.get("pran") or itm.get("public_address") or itm.get("tracking_label") or "N/A"
+            )
+            tracking_ledger.append({
+                "category": cat_name,
+                "asset_name": itm.get("name", "Unnamed Asset"),
+                f"value_{currency_sym}": itm.get("amount", itm.get("market_value", 0.0)),
+                "source": itm.get("source", "Not Specified"),
+                "account_or_identifier": ident,
+                "portal_url": itm.get("portal_url", "N/A"),
+                "notes": itm.get("type") or itm.get("notes") or ""
+            })
+
+    for l in liabilities:
+        l_ident = (
+            l.get("loan_account_id") or l.get("loan_account_number") or
+            l.get("mortgage_account_id") or l.get("account_id") or "N/A"
+        )
+        rate_val = l.get('interest_rate_pct')
+        if rate_val is None and 'interest_rate' in l:
+            rate_val = round(l['interest_rate'] * 100, 2)
+        tracking_ledger.append({
+            "category": "liabilities",
+            "asset_name": l.get("name", "Liability"),
+            f"value_{currency_sym}": -abs(l.get("principal_outstanding", 0.0)),
+            "source": l.get("lender") or l.get("source", "Not Specified"),
+            "account_or_identifier": l_ident,
+            "portal_url": l.get("portal_url", "N/A"),
+            "notes": f"Rate: {rate_val}%, EMI: {currency_sym}{l.get('monthly_emi', l.get('monthly_payment', 0))}"
+        })
+
     return {
         "profile_metadata": {
             "profile_name": profile.get("profile_name", Path(file_path).stem),
@@ -1112,6 +1281,14 @@ def evaluate_profile(file_path: str, inflation: float = 0.065, swr: float = 0.03
             f"corpus_gap ({currency_sym})": round(corpus_gap, 2),
             f"required_monthly_savings ({currency_sym})": round(required_monthly_sip, 2),
             "status": "FI on track!" if corpus_gap == 0 else f"Requires additional {currency_sym}{round(required_monthly_sip):,}/month savings"
+        },
+        "asset_tracking_source_ledger": {
+            "total_tracked_assets_and_liabilities": len(tracking_ledger),
+            "ledger": tracking_ledger,
+            "protection_policies": {
+                "term_life_source": protection.get("term_insurance_source", "N/A"),
+                "health_insurance_source": protection.get("health_insurance_source", "N/A")
+            }
         },
         "money_health_diagnostic": mhs_result
     }
