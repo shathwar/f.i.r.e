@@ -63,7 +63,7 @@ When advising a client, ensure the response covers:
 
 ## Part B: India (Bharat) & NRI F.I.R.E. Framework
 
-*(Refer to [`references/india_investments_and_tax.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/india_investments_and_tax.md) and [`references/financial_health_and_protection.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/financial_health_and_protection.md) for full operational guides)*
+*(Refer to [`references/india_investments_and_tax.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/india_investments_and_tax.md), [`references/financial_health_and_protection.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/financial_health_and_protection.md), and [`references/market_data_sources.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/market_data_sources.md) for full operational guides and data lineage)*
 
 ### 1. The Indian FIRE Calculus
 * **Inflation Adjustment**: Base annual expenses must be compounded at **6.5% annual inflation**:
