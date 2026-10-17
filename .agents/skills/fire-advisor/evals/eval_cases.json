@@ -1,0 +1,149 @@
+{
+  "description": "Evaluation cases for Multi-Jurisdiction (UK & India) F.I.R.E. Senior Financial Advisor skill",
+  "eval_cases": [
+    {
+      "id": "eval_01_fire_target_sizing",
+      "capability": "FIRE target",
+      "jurisdiction": "UK",
+      "prompt": "I want to spend £50,000 net per year in early retirement. How much invested wealth do I need, and why shouldn't I just use the 4% rule?",
+      "expected_criteria": [
+        "Distinguishes 4% rule (30-year US horizon) from conservative UK early retirement baseline (3.25% - 3.5%)",
+        "Calculates target between £1,428,571 (at 3.5%) and £1,538,461 (at 3.25%)",
+        "Explains Lean, Standard, and Flexible/Dynamic withdrawal options",
+        "Considers future State Pension offset (~£11,500/year at age 67/68)"
+      ]
+    },
+    {
+      "id": "eval_02_retirement_date_projection",
+      "capability": "Retirement date",
+      "jurisdiction": "UK",
+      "prompt": "I am 34 years old with £180,000 saved. I earn £90,000, save £35,000/year, and plan to spend £42,000/year in retirement. At what age can I achieve FIRE?",
+      "expected_criteria": [
+        "Calculates target portfolio (£42k / 0.035 = ~£1.2M)",
+        "Models years to FI assuming 5% real return",
+        "Projects specific retirement age (around age 47-49)",
+        "Highlights savings rate impact on the retirement timeline"
+      ]
+    },
+    {
+      "id": "eval_03_uk_tax_waterfall_and_60_trap",
+      "capability": "UK tax optimisation",
+      "jurisdiction": "UK",
+      "prompt": "My gross salary recently jumped to £118,000. How should I balance pension contributions, my Stocks & Shares ISA, and taxable accounts?",
+      "expected_criteria": [
+        "Identifies the £100,000 - £125,140 Personal Allowance taper (the 60% tax trap, 62% with NI)",
+        "Advises salary sacrifice or SIPP contribution of £18,000 to bring adjusted net income to £100,000",
+        "Calculates immediate tax relief advantage over ISA",
+        "Explains the need to maintain sufficient ISA funding for any pre-57 early retirement bridge"
+      ]
+    },
+    {
+      "id": "eval_04_mortgage_overpayment_vs_investing",
+      "capability": "Mortgage strategy",
+      "jurisdiction": "UK",
+      "prompt": "I have £25,000 surplus cash. My mortgage is £220,000 at 5.2% with 18 years left. Should I overpay the mortgage or invest it in my ISA or Pension?",
+      "expected_criteria": [
+        "Compares guaranteed tax-free return of 5.2% against expected equity returns",
+        "Explains tax relief arbitrage if client is a higher-rate (40%) taxpayer (pension relief vastly outperforms mortgage overpayment)",
+        "Evaluates the liquidity trade-off (mortgage is illiquid, ISA is accessible)",
+        "Explains how eliminating mortgage lowers living expenses and shrinks the required FIRE pot"
+      ]
+    },
+    {
+      "id": "eval_05_pension_bridge_pre_57",
+      "capability": "Pension bridge",
+      "jurisdiction": "UK",
+      "prompt": "I want to retire at age 46, but my private pension is locked until 57. How do I structure my bridge to fund those 11 years?",
+      "expected_criteria": [
+        "Identifies the 11-year gap between retirement (46) and NMPA (57)",
+        "Calculates total bridge capital required in accessible accounts (ISAs / GIAs / Cash)",
+        "Proposes a multi-bucket architecture: Bucket 1 (1-2 yrs cash), Bucket 2 (3-5 yrs bonds/defensive), Bucket 3 (equities in ISA)",
+        "Explains the transition at 57: PCLS (25% tax-free lump sum) and basic-rate pension drawdown"
+      ]
+    },
+    {
+      "id": "eval_06_market_crash_stress_test",
+      "capability": "Stress testing",
+      "jurisdiction": "UK",
+      "prompt": "What happens if the stock market crashes 30% right after I pull the trigger on retirement? How do I make sure I don't run out of money?",
+      "expected_criteria": [
+        "Explains Sequence of Returns Risk (SORR) and the danger of selling equities at depressed prices",
+        "Outlines the 2-year cash buffer defense mechanism",
+        "Applies Guyton-Klinger capital preservation guardrail (-10% spending cut if withdrawal rate spikes >20%)",
+        "Details discretionary spending reduction and potential Barista/consulting income flex"
+      ]
+    },
+    {
+      "id": "eval_07_household_and_spousal_planning",
+      "capability": "Household planning",
+      "jurisdiction": "UK",
+      "prompt": "I earn £130,000 and my partner earns £26,000. How do we optimize our pensions, ISAs, and assets as a couple for FIRE?",
+      "expected_criteria": [
+        "Doubling allowances: £40,000 ISA allowance across two accounts",
+        "Explains danger of unequal pension pots in retirement and calculates tax savings from equalizing",
+        "Covers non-earner / lower-earner pension contribution rules (£2,880 net -> £3,600 gross)",
+        "Mentions nil gain / nil loss spousal asset transfers to utilize lower earner's CGT and basic tax band"
+      ]
+    },
+    {
+      "id": "eval_08_ongoing_reviews_and_health_check",
+      "capability": "Ongoing reviews",
+      "jurisdiction": "UK",
+      "prompt": "I am 3 years into my FIRE plan. How should I review my progress annually, and what tells me if I am drifting off track?",
+      "expected_criteria": [
+        "Outlines annual reconciliation: actual spending vs budgeted spending and portfolio CAGR vs 5% real return baseline",
+        "Defines Traffic Light framework (Green: on track / accelerate; Amber: minor drift / freeze inflation; Red: intervention / delay or cut spend)",
+        "Reviews UK tax policy updates (Budget changes to allowances, NMPA, CGT)",
+        "Rebalancing protocol between cash buffer, bonds, and equities"
+      ]
+    },
+    {
+      "id": "eval_09_india_fire_corpus_and_sip_gap",
+      "capability": "India FIRE Target & SIP Gap",
+      "jurisdiction": "India",
+      "prompt": "I am 32 years old living in Bengaluru with monthly expenses of ₹75,000. I have ₹25 Lakhs invested. I want to retire at 47. What is my FIRE target and monthly SIP gap?",
+      "expected_criteria": [
+        "Compounds expenses at 6.5% inflation across 15 years to ~₹1.93 Lakhs/month (~₹23.15 Lakhs/year)",
+        "Applies India-calibrated SWR of 3.0% - 3.3% to calculate ~₹7.01 Crores target corpus",
+        "Projects future value of current ₹25L portfolio at 12% CAGR to ~₹1.37 Crores",
+        "Calculates monthly SIP required to bridge the remaining ₹5.65 Crores gap (~₹1.18 Lakhs/month)"
+      ]
+    },
+    {
+      "id": "eval_10_india_tax_regime_optimization",
+      "capability": "India Tax Optimization",
+      "jurisdiction": "India",
+      "prompt": "My annual CTC is ₹22 Lakhs. I pay ₹35,000/month rent in Mumbai (Metro), invest ₹1.5L in 80C, ₹50k in NPS 80CCD(1B), and ₹25k in 80D health insurance. Should I choose the Old or New Regime?",
+      "expected_criteria": [
+        "Computes HRA exemption under the minimum of 3 conditions formula",
+        "Tallies eligible deductions under Old Regime (HRA + 80C + 80CCD + 80D + ₹50k standard deduction)",
+        "Compares against New Regime with ₹75,000 standard deduction and progressive slabs",
+        "Recommends Old Regime with concrete annual ₹ tax savings calculated"
+      ]
+    },
+    {
+      "id": "eval_11_india_home_loan_prepay_vs_sip",
+      "capability": "India Loan Prepayment vs Equity SIP",
+      "jurisdiction": "India",
+      "prompt": "I have an outstanding home loan of ₹50 Lakhs at 8.75% for 20 years. Should I prepay ₹10,000 extra per month or invest it in a Nifty 50 Index Fund SIP?",
+      "expected_criteria": [
+        "Calculates reducing-balance EMI (~₹44,185/month) and total baseline interest (~₹56 Lakhs)",
+        "Calculates that paying an extra ₹10,000/month saves ~₹22.7 Lakhs in interest and cuts tenure by ~7.2 years",
+        "Compares 8.75% guaranteed risk-free return with equity after LTCG tax (12% CAGR - 12.5% tax = ~10.5% net)",
+        "Provides a balanced hybrid recommendation or clear decision criteria based on tax regime and risk tolerance"
+      ]
+    },
+    {
+      "id": "eval_12_money_health_score_protection_first",
+      "capability": "Money Health Score & Protection Moat",
+      "jurisdiction": "India",
+      "prompt": "I earn ₹1,50,000/month, spend ₹60,000/month, pay ₹35,000 EMI, have ₹6 Lakhs in liquid funds, and want to start investing ₹50,000 in mutual funds. I don't have life insurance yet because I'm single with dependent parents. How is my financial health?",
+      "expected_criteria": [
+        "Enforces Protection-First Rule: mandates pure term insurance (15x annual income = ₹2.7 Crores) before aggressive equity scaling",
+        "Evaluates Emergency Shield: 6 months of expenses + EMI = ₹5.7 Lakhs (current ₹6L is adequate)",
+        "Calculates Debt FOIR = 23.3% (healthy, < 30%)",
+        "Computes Money Health Score across the 6 dimensions and provides a prioritized action plan"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+# UK & India F.I.R.E. Advisor (Financial Independence, Retire Early)
+
+A Senior Chartered Financial Planner (CFP®) and Quantitative F.I.R.E. advisory skill for the Antigravity agent system, customized for **both the UK and Indian (Bharat) & NRI financial landscapes**.
+
+Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks from [`SimonHaynes/claude_fire`](https://github.com/SimonHaynes/claude_fire) with the Indian tax optimization, SIP compounding, loan prepayment, and Money Health Score (MHS) engines from [`jaineejain/ArthMitra`](https://github.com/jaineejain/ArthMitra).
+
+---
+
+## 🎯 Dual-Jurisdiction Capabilities
+
+### 🇬🇧 UK F.I.R.E. Focus
+* **FIRE Target & SWR**: Sizing portfolios with 3.25%–3.50% safe withdrawal rates.
+* **Pre-57 Pension Bridge**: Funding early retirement before NMPA 57 using a 3-bucket ISA/cash architecture.
+* **Tax Optimization & 60% Trap**: Reclaiming personal allowance between £100k–£125k via Salary Sacrifice/SIPP (+62% relief).
+* **April 2027 IHT Inversion ("Pensions First")**: Drawing down pensions to the £50,270 basic band (20% tax) to avoid the 64% death tax post-75, and recycling surplus into ISAs.
+* **First Death & Survivor Shock**: Modeling the loss of 1 personal allowance, 1 state pension, and DB pension halving.
+
+### 🇮🇳 India (Bharat) & NRI F.I.R.E. Focus
+* **India FIRE Calculus**: Compounding expenses at **6.5% inflation** with a conservative **3.0%–3.3% SWR**; outputs corpus targets in ₹ Crores and calculates monthly equity SIP gaps at 12% CAGR.
+* **Tax Optimization (Old vs. New Regime)**: Accurate slabs for FY 24-25 / FY 25-26 with Section 87A rebate, standard deduction (₹75k New vs ₹50k Old), 80C, 80CCD(1B) NPS, 80D, 24(b), and HRA exemption formula.
+* **Couple's Optimization**: Strategic HRA claims by higher-earning spouse and joint home loan double-dipping (₹4L interest / ₹3L principal deductions).
+* **Loan Prepayment vs. Equity SIP**: Reducing-balance monthly compounding EMI simulator; shows tenure reduction and lakhs saved in interest.
+* **The Protection-First Rule**: Enforces the Arth Protocol—never prescribes aggressive equity SIPs without a 6-month Emergency Shield and 15x–20x Pure Term Life Insurance.
+* **Money Health Score (MHS)**: 6-dimension diagnostic (0–100) assessing Emergency, Insurance, Debt/FOIR, Investment, and Savings discipline.
+
+---
+
+## 📁 Skill Package Architecture
+
+```text
+.agents/skills/fire-advisor/
+├── SKILL.md                 # Primary advisory prompt, CFP persona, contracts & capability runbooks
+├── VERSION                  # 1.2.0
+├── CHANGELOG.md             # Semantic version changelog
+├── references/
+│   ├── uk_tax_wrappers.md   # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
+│   ├── pension_bridge_and_sorr.md # Pre-57 bridge, multi-bucket design, 30% crash & care costs
+│   ├── mortgage_vs_investing.md   # Mathematical models comparing mortgage paydown vs. investing
+│   ├── household_optimization.md  # Spousal allowances, equalizing pots, survivor shock & transfers
+│   ├── india_investments_and_tax.md # MFs, EPF, PPF, NPS, Old vs New Regime, HRA, 6.5% inflation
+│   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
+├── scripts/
+│   └── fire_calculator.py   # Multi-jurisdiction CLI calculation engine (UK & India)
+└── evals/
+    └── eval_cases.json      # Comprehensive evaluation suite (12 test scenarios across UK & India)
+```
+
+---
+
+## 🧮 Running the Multi-Jurisdiction Calculator CLI
+
+You can run direct calculations anytime via Python:
+
+```bash
+# --- UK & GLOBAL CALCULATIONS ---
+
+# 1. UK FIRE Target (£40k spend at 3.5% SWR)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py target --spend 40000 --swr 0.035
+
+# 2. UK Pension Bridge (Retiring at 47, £45k spend to age 57)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py bridge --retire-age 47 --spend 45000
+
+# 3. Post-April 2027 Effective Death Tax (Inherited Pension vs ISA on £500k pot)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py death-tax --pot 500000 --beneficiary-rate 0.40
+
+# 4. First Death Survivor Shock (£45,000 couple spend, £10,000 DB pension)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py survivor --spend 45000 --db 10000
+
+
+# --- INDIA (BHARAT) & NRI CALCULATIONS ---
+
+# 5. India Tax Regime Comparator (CTC ₹20 Lakhs, HRA, 80C, 80CCD, 80D)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py india-tax \
+  --gross 2000000 --basic 1000000 --hra 400000 --rent 360000 --metro \
+  --sec-80c 150000 --sec-80ccd 50000 --sec-80d 25000
+
+# 6. India FIRE Corpus & Monthly SIP Gap (Age 32 -> 47, ₹75k/mo spend, ₹25L portfolio)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py india-fire \
+  --age 32 --retire-age 47 --monthly-spend 75000 --portfolio 2500000
+
+# 7. Reducing-Balance Home Loan Prepayment (₹50 Lakhs @ 8.75% for 20 yrs, extra ₹10k/mo)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py loan-prepay \
+  --principal 5000000 --rate 8.75 --tenure 20 --extra-monthly 10000
+
+# 8. Money Health Score Diagnostic (0-100)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py mhs \
+  --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 25000000 --age 32
+```
