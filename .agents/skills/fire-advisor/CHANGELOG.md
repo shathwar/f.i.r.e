@@ -1,5 +1,18 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.7.0] - 2026-10-17
+
+### Added Independent Mathematical Proof Test Suite & Cross-Border DTAA Engine:
+- **Independent Mathematical Proof Test Suite (`tests/test_independent_proofs.py`)**:
+  - Implemented 24 comprehensive independent tests calculating statutory equations, closed-form sinking fund formulas, reducing-balance amortizations, and double tax relief from first principles.
+  - **India Tax Regimes & Marginal Relief Cliff Edges**: Proves exact zero tax at ₹12.0L net taxable (₹12.75L gross CTC with ₹75k standard deduction), marginal relief at ₹12,00,001, ₹12,10,000, and upper boundary ₹12,70,588, and cliff edge transition at ₹12,70,589; verifies AY 2025-26 legacy ₹7.0L rebate.
+  - **SIP Sinking Fund & Inflation Escalation**: Tests compound inflation $C_N = C_0(1+i)^N$, SWR sizing, portfolio growth, and monthly annuity sinking fund equation with zero-deficit boundary protections.
+  - **UK Pension Drawdowns & Death Tax Scenarios**: Proves 60% trap personal allowance taper (£100k–£125k), Section 18 IHTA 1984 100% spousal exemption on first death, Nil-Rate Band protection (£325k–£1M), 64% combined drag on large estates (>£2.5M), pre-75 death income tax freedom, and non-earning spouse +25.0% Personal Allowance arbitrage (£2,880 net / £3,600 gross).
+  - **Mortgage Prepayment vs. Equity Investing**: Proves exact reducing-balance monthly amortization EMI, interest savings, tenure reduction, and post-LTCG equity hurdle rates.
+  - **Cross-Border Currency PPP & DTAA Relief**: Proves nominal exchange rate depreciation parity $R_T = R_0((1+i_{\text{INR}})/(1+i_{\text{GBP}}))^T$, NRE Section 10(4)(ii) exemption, NRO TDS reduction (31.2% domestic vs 15.0% treaty with TRC + Form 10F), DTAA Article 20 (Private pensions taxable only in residence state; NT PAYE code via Form India-Individual 2004), DTAA Article 19 (Government pensions taxable in source state), and Foreign Tax Credit (FTC) statutory ceilings under Section 90 / Form 67 & Section 790 TIOPA 2010.
+- **Cross-Border Statutory Calculation Engine (`cross-border`)**:
+  - Added `calculate_cross_border_dtaa()` and `cross-border` CLI subcommand to `fire_calculator.py`.
+
 ## [1.6.0] - 2026-10-17
 
 ### Updated Indian Statutory Tax Model (AY 2026-27 & CTC Invariant):

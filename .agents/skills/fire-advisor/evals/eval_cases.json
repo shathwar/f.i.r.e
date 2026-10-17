@@ -241,6 +241,20 @@
         "Rejects unconditional prohibition against non-earner pensions: demonstrates Personal Allowance Arbitrage yielding an immediate +25% return (£2,880 net -> £3,600 tax-free) when drawn within the £12,570 allowance",
         "Highlights spousal pot equalization allowing the household to extract up to £25,140 tax-free annually across both Personal Allowances"
       ]
+    },
+    {
+      "id": "eval_21_cross_border_dtaa_and_independent_proofs",
+      "capability": "Cross-Border DTAA, Currency PPP & Independent Calculation Proofs",
+      "jurisdiction": "Cross-Border (UK & India)",
+      "prompt": "I am a UK NRI with £40,000 in UK pension, ₹5 Lakhs in NRO interest, and ₹3 Lakhs in NRE deposits. What are the DTAA implications, how is NRO TDS minimized, and how do you mathematically prove your advice without relying on eyeball approximations?",
+      "expected_criteria": [
+        "Applies UK-India DTAA Article 20: private pensions are taxable only in the state of residence, citing HMRC Form India-Individual 2004 for NT code",
+        "Differentiates NRE interest (100% tax-free in India under Section 10(4)(ii)) from NRO interest",
+        "Calculates NRO TDS savings: submitting HMRC Tax Residency Certificate (TRC) + Form 10F reduces withholding from 31.2% (domestic Section 195) to 15.0% (DTAA Article 12)",
+        "Calculates Foreign Tax Credit (FTC) ceiling under Section 90 / Form 67 & Section 790 TIOPA 2010 as min(Foreign Tax Paid, Domestic Tax Payable)",
+        "Projects currency Purchasing Power Parity (PPP) adjusting for Indian vs UK inflation differential ((1 + i_INR)/(1 + i_GBP))^T",
+        "References independent automated test suite (tests/test_independent_proofs.py) proving statutory calculations and boundary conditions to the exact penny/rupee"
+      ]
     }
   ]
 }

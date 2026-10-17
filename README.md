@@ -45,7 +45,7 @@ This workspace contains two specialized, complementary financial advisory skills
 .agents/skills/
 ├── fire-advisor/                   # Strategic F.I.R.E. Planning & Wealth Architecture
 │   ├── SKILL.md                    # Primary advisory prompt, CFP persona & runbooks
-│   ├── VERSION                     # 1.5.0
+│   ├── VERSION                     # 1.7.0
 │   ├── CHANGELOG.md                # Semantic version changelog
 │   ├── references/
 │   │   ├── uk_tax_wrappers.md      # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
@@ -131,21 +131,36 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py real-estate-eval 
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py crypto-tax \
   --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000
 
+# 13. Cross-Border UK-India DTAA, FTC & Currency PPP
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py cross-border \
+  --uk-pension 40000 --india-nro 500000 --rate 105 --has-trc
 
 # --- LOCAL CLIENT PROFILE STORAGE & ASSET MANAGEMENT ---
 
-# 13. Generate blank profile template in your chosen directory
+# 14. Generate blank profile template in your chosen directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-template \
   --jurisdiction india --output /Users/Sumanth/Documents/MyFIREProfiles/anita.json
 
-# 14. List profiles in your chosen directory
+# 15. List profiles in your chosen directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-list \
   --dir /Users/Sumanth/Documents/MyFIREProfiles/
 
-# 15. Run full F.I.R.E. evaluation & Money Health Score on a stored profile
+# 16. Run full F.I.R.E. evaluation & Money Health Score on a stored profile
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-eval \
   --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
 ```
+
+---
+
+### 🧪 Independent Mathematical Proof Test Suite
+
+The mathematical models and statutory tax rules are independently proved by an extensive automated test suite (`tests/test_independent_proofs.py`). Every calculation—Indian tax slabs, Section 87A marginal relief cliff edges, SIP sinking fund equations, UK pension taper, reducing-balance loan amortization, and cross-border FTC ceilings—is computed from closed-form first principles and asserted down to the exact Rupee/Penny:
+
+```bash
+# Execute independent mathematical proofs and boundary regressions
+python3 -m unittest discover tests
+```
+
 
 ---
 

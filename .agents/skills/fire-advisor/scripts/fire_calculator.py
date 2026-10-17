@@ -1598,6 +1598,182 @@ def evaluate_profile(file_path: str, inflation: float = 0.065, swr: float = 0.03
     }
 
 
+def calculate_cross_border_dtaa(uk_pension_gbp: float = 0.0,
+                                india_nro_income_inr: float = 0.0,
+                                india_nre_income_inr: float = 0.0,
+                                uk_tax_paid_gbp: float = 0.0,
+                                india_tax_paid_inr: float = 0.0,
+                                gbp_inr_rate: float = 105.0,
+                                india_inflation: float = 0.065,
+                                uk_inflation: float = 0.025,
+                                years: int = 10,
+                                is_uk_resident: bool = True,
+                                has_trc: bool = False,
+                                pension_type: str = "private",
+                                uk_marginal_rate: float = 0.20,
+                                india_marginal_rate: float = 0.30) -> Dict[str, Any]:
+    """
+    Evaluates cross-border taxation, statutory DTAA relief, NRE/NRO accounts, and currency PPP.
+    - UK-India Double Tax Avoidance Agreement (DTAA):
+        * Article 20: Private/occupational pensions are taxable ONLY in the country of residence.
+        * Article 19: Government/civil service pensions are taxable in paying country.
+        * Article 12: Interest income taxed at domestic 30% + cess (31.2%) or DTAA 15% with TRC + Form 10F.
+    - Foreign Tax Credit (FTC): Under Section 90 / Form 67 (India) and TIOPA 2010 (UK):
+        Relief = min(Foreign Tax Paid, Domestic Tax Payable on that income).
+    - Purchasing Power Parity (PPP): Projected exchange rate over time T:
+        Rate_T = Rate_0 * ((1 + i_INR) / (1 + i_GBP))^T
+    """
+    # 1. Currency Purchasing Power Parity (PPP) Projection
+    inflation_ratio = (1.0 + india_inflation) / (1.0 + uk_inflation)
+    projected_rate = gbp_inr_rate * (inflation_ratio ** years)
+    annual_depreciation_pct = (inflation_ratio - 1.0) * 100.0
+
+    current_pension_inr = uk_pension_gbp * gbp_inr_rate
+    projected_pension_inr = uk_pension_gbp * projected_rate
+
+    # 2. NRE Interest (Section 10(4)(ii) of Indian Income Tax Act)
+    nre_india_tax = 0.0
+    nre_gbp = india_nre_income_inr / gbp_inr_rate if gbp_inr_rate > 0 else 0.0
+    nre_uk_tax = nre_gbp * uk_marginal_rate if is_uk_resident else 0.0
+
+    # 3. NRO Interest TDS (Domestic Sec 195 vs DTAA Article 12)
+    # Domestic: 30% + 4% cess = 31.2%
+    # DTAA Article 12: 15% with valid TRC (Tax Residency Certificate) + Form 10F
+    tds_rate = 0.15 if has_trc else 0.312
+    nro_tds_deducted_inr = india_nro_income_inr * tds_rate
+    nro_tds_deducted_gbp = nro_tds_deducted_inr / gbp_inr_rate if gbp_inr_rate > 0 else 0.0
+    potential_tds_saving_inr = india_nro_income_inr * (0.312 - 0.15) if not has_trc else 0.0
+
+    # 4. Pension DTAA Evaluation (Article 19 vs Article 20)
+    pension_classification = pension_type.lower()
+    pension_notes = []
+    if pension_classification == "private":
+        article_cited = "Article 20 (UK-India DTAA)"
+        if is_uk_resident:
+            pension_taxable_in = "UK Only"
+            pension_uk_tax_liability = uk_pension_gbp * uk_marginal_rate
+            pension_india_tax_liability = 0.0
+            pension_notes.append("Under DTAA Article 20, UK private/occupational pensions are taxable ONLY in the UK for UK residents. Zero Indian tax.")
+        else:
+            pension_taxable_in = "India Only"
+            pension_uk_tax_liability = 0.0
+            pension_india_tax_liability = current_pension_inr * india_marginal_rate
+            pension_notes.append("Under DTAA Article 20, UK private/occupational pensions are taxable ONLY in the state of residence (India).")
+            pension_notes.append("ACTION: File HMRC Form 'India-Individual 2004' to claim treaty relief and obtain an 'NT' (No Tax) PAYE code in the UK to prevent UK tax withholding.")
+    else:
+        article_cited = "Article 19 (UK-India DTAA)"
+        pension_taxable_in = "UK (Source State)"
+        pension_uk_tax_liability = uk_pension_gbp * uk_marginal_rate
+        if is_uk_resident:
+            pension_india_tax_liability = 0.0
+            pension_notes.append("Under DTAA Article 19, UK Government/Civil Service pensions are taxable in the UK. No Indian tax as UK resident.")
+        else:
+            pension_india_tax_liability = current_pension_inr * india_marginal_rate
+            pension_notes.append("Under DTAA Article 19, UK Government pensions are taxable in the UK. When taxed in India on worldwide income, Foreign Tax Credit (FTC) under Section 90 / Form 67 applies.")
+
+    # 5. Foreign Tax Credit (FTC) / Double Taxation Relief Calculation
+    ftc_summary = {}
+    recommendations = []
+
+    if is_uk_resident:
+        nro_gbp = india_nro_income_inr / gbp_inr_rate if gbp_inr_rate > 0 else 0.0
+        uk_tax_on_nro = nro_gbp * uk_marginal_rate
+        actual_india_tax_paid_inr = india_tax_paid_inr if india_tax_paid_inr > 0 else nro_tds_deducted_inr
+        actual_india_tax_paid_gbp = actual_india_tax_paid_inr / gbp_inr_rate if gbp_inr_rate > 0 else 0.0
+
+        uk_ftc_allowed = min(actual_india_tax_paid_gbp, uk_tax_on_nro)
+        uk_net_tax_payable = max(0.0, uk_tax_on_nro - uk_ftc_allowed)
+        unrelieved_foreign_tax_gbp = max(0.0, actual_india_tax_paid_gbp - uk_ftc_allowed)
+
+        ftc_summary = {
+            "residence_jurisdiction": "UK (HMRC)",
+            "foreign_income_gbp": round(nro_gbp, 2),
+            "uk_tax_liability_on_foreign_income": round(uk_tax_on_nro, 2),
+            "foreign_tax_paid_gbp (India TDS)": round(actual_india_tax_paid_gbp, 2),
+            "foreign_tax_credit_allowed_gbp": round(uk_ftc_allowed, 2),
+            "net_uk_tax_payable_to_hmrc": round(uk_net_tax_payable, 2),
+            "unrelieved_foreign_tax_drag_gbp": round(unrelieved_foreign_tax_gbp, 2),
+            "double_tax_relief_mechanism": "Section 790 TIOPA 2010 / UK Double Taxation Relief"
+        }
+
+        if not has_trc and india_nro_income_inr > 0:
+            recommendations.append(
+                f"Obtain HMRC Certificate of Residence and file Form 10F online with Indian bank. "
+                f"This caps NRO TDS at 15% instead of 31.2%, saving ₹{potential_tds_saving_inr:,.0f} and avoiding uncreditable foreign tax drag."
+            )
+        if india_nre_income_inr > 0:
+            recommendations.append(
+                f"India NRE interest (₹{india_nre_income_inr:,.0f}) is 100% tax-free in India under Sec 10(4)(ii), "
+                f"but reportable in UK under worldwide income rules (£{round(nre_gbp, 2):,})."
+            )
+
+    else:
+        uk_income_inr = current_pension_inr
+        india_tax_on_uk_income = pension_india_tax_liability
+        actual_uk_tax_paid_gbp = uk_tax_paid_gbp if uk_tax_paid_gbp > 0 else pension_uk_tax_liability
+        actual_uk_tax_paid_inr = actual_uk_tax_paid_gbp * gbp_inr_rate
+
+        india_ftc_allowed = min(actual_uk_tax_paid_inr, india_tax_on_uk_income)
+        india_net_tax_payable = max(0.0, india_tax_on_uk_income - india_ftc_allowed)
+        unrelieved_foreign_tax_inr = max(0.0, actual_uk_tax_paid_inr - india_ftc_allowed)
+
+        ftc_summary = {
+            "residence_jurisdiction": "India (Income Tax Department)",
+            "foreign_income_inr": round(uk_income_inr, 2),
+            "india_tax_liability_on_foreign_income": round(india_tax_on_uk_income, 2),
+            "foreign_tax_paid_inr (UK HMRC)": round(actual_uk_tax_paid_inr, 2),
+            "foreign_tax_credit_allowed_inr": round(india_ftc_allowed, 2),
+            "net_india_tax_payable": round(india_net_tax_payable, 2),
+            "unrelieved_foreign_tax_drag_inr": round(unrelieved_foreign_tax_inr, 2),
+            "double_tax_relief_mechanism": "Section 90 of Income Tax Act 1961 read with Rule 128 (Mandatory Form 67 filing)"
+        }
+
+        if actual_uk_tax_paid_inr > 0:
+            recommendations.append(
+                "MANDATORY: Submit Form 67 online before filing Indian Income Tax Return (ITR) to claim Foreign Tax Credit under Section 90. Failure to submit Form 67 before the due date can result in FTC denial."
+            )
+        if pension_classification == "private":
+            recommendations.append(
+                "Submit HMRC Form 'India-Individual 2004' to claim DTAA Article 20 exemption in the UK so HMRC issues an NT (No Tax) PAYE code, avoiding unnecessary UK withholding."
+            )
+
+    return {
+        "currency_ppp_projection": {
+            "base_rate_gbp_inr": round(gbp_inr_rate, 2),
+            "projection_years": years,
+            "india_inflation_percent": round(india_inflation * 100, 2),
+            "uk_inflation_percent": round(uk_inflation * 100, 2),
+            "annual_inr_depreciation_percent": round(annual_depreciation_pct, 2),
+            "projected_exchange_rate_in_years": round(projected_rate, 2),
+            "uk_pension_current_annual_inr": round(current_pension_inr, 2),
+            "uk_pension_future_annual_inr": round(projected_pension_inr, 2),
+            "ppp_insight": f"Due to the {round((india_inflation - uk_inflation) * 100, 1)}% inflation differential, GBP/INR is projected to reach ₹{round(projected_rate, 1)} in {years} years. A fixed £{uk_pension_gbp:,.0f} pension grows in nominal INR terms from ₹{current_pension_inr/1e5:.1f}L to ₹{projected_pension_inr/1e5:.1f}L."
+        },
+        "nre_nro_banking_tax": {
+            "nre_interest_inr": round(india_nre_income_inr, 2),
+            "nre_tax_in_india": 0.0,
+            "nre_statutory_exemption": "Section 10(4)(ii) of Indian Income Tax Act (100% Tax-Free in India)",
+            "nre_taxable_in_uk": round(nre_uk_tax, 2) if is_uk_resident else 0.0,
+            "nro_interest_inr": round(india_nro_income_inr, 2),
+            "has_valid_trc_and_form_10f": has_trc,
+            "applicable_nro_tds_rate_percent": round(tds_rate * 100, 1),
+            "nro_tds_deducted_inr": round(nro_tds_deducted_inr, 2),
+            "nro_tds_deducted_gbp": round(nro_tds_deducted_gbp, 2),
+            "potential_tds_saving_with_trc_inr": round(potential_tds_saving_inr, 2)
+        },
+        "pension_dtaa_assessment": {
+            "pension_type": pension_type,
+            "dtaa_article": article_cited,
+            "taxable_in": pension_taxable_in,
+            "uk_tax_liability_gbp": round(pension_uk_tax_liability, 2),
+            "india_tax_liability_inr": round(pension_india_tax_liability, 2),
+            "treaty_guidance_notes": pension_notes
+        },
+        "double_tax_relief_ftc": ftc_summary,
+        "actionable_compliance_steps": recommendations
+    }
+
+
 # ==============================================================================
 # MAIN CLI DISPATCHER
 # ==============================================================================
@@ -1757,6 +1933,23 @@ def main():
     p_pro_eval.add_argument("--inflation", type=float, default=0.065, help="Assumed inflation (default 0.065 for India)")
     p_pro_eval.add_argument("--swr", type=float, default=0.033, help="Safe withdrawal rate (default 0.033 for India)")
 
+    # Cross-Border DTAA & Currency PPP
+    p_cb = subparsers.add_parser("cross-border", help="Analyze cross-border DTAA, FTC, NRE/NRO taxation and currency PPP")
+    p_cb.add_argument("--uk-pension", type=float, default=0.0, help="Annual UK pension in GBP")
+    p_cb.add_argument("--india-nro", type=float, default=0.0, help="Annual India NRO interest/income in INR")
+    p_cb.add_argument("--india-nre", type=float, default=0.0, help="Annual India NRE interest in INR")
+    p_cb.add_argument("--uk-tax-paid", type=float, default=0.0, help="UK tax paid in GBP")
+    p_cb.add_argument("--india-tax-paid", type=float, default=0.0, help="India tax paid in INR")
+    p_cb.add_argument("--rate", type=float, default=105.0, help="GBP/INR exchange rate (default 105.0)")
+    p_cb.add_argument("--india-inflation", type=float, default=0.065, help="Assumed India inflation (default 0.065)")
+    p_cb.add_argument("--uk-inflation", type=float, default=0.025, help="Assumed UK inflation (default 0.025)")
+    p_cb.add_argument("--years", type=int, default=10, help="PPP projection horizon in years (default 10)")
+    p_cb.add_argument("--india-resident", action="store_true", help="Set if tax resident in India (default: UK resident)")
+    p_cb.add_argument("--has-trc", action="store_true", help="Set if HMRC Tax Residency Certificate and Form 10F provided")
+    p_cb.add_argument("--pension-type", type=str, default="private", choices=["private", "government"], help="Pension classification under DTAA")
+    p_cb.add_argument("--uk-bracket", type=str, default="basic", choices=["basic", "higher", "additional"], help="UK marginal tax bracket")
+    p_cb.add_argument("--india-bracket", type=float, default=0.30, help="India marginal tax rate (e.g. 0.30)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -1820,6 +2013,25 @@ def main():
         res = load_profile(args.file)
     elif args.command == "profile-eval":
         res = evaluate_profile(args.file, args.inflation, args.swr)
+    elif args.command == "cross-border":
+        uk_rates = {"basic": 0.20, "higher": 0.40, "additional": 0.45}
+        uk_marginal = uk_rates.get(args.uk_bracket, 0.20)
+        res = calculate_cross_border_dtaa(
+            uk_pension_gbp=args.uk_pension,
+            india_nro_income_inr=args.india_nro,
+            india_nre_income_inr=args.india_nre,
+            uk_tax_paid_gbp=args.uk_tax_paid,
+            india_tax_paid_inr=args.india_tax_paid,
+            gbp_inr_rate=args.rate,
+            india_inflation=args.india_inflation,
+            uk_inflation=args.uk_inflation,
+            years=args.years,
+            is_uk_resident=not args.india_resident,
+            has_trc=args.has_trc,
+            pension_type=args.pension_type,
+            uk_marginal_rate=uk_marginal,
+            india_marginal_rate=args.india_bracket
+        )
 
     print(json.dumps(res, indent=2))
 

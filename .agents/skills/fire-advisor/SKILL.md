@@ -143,12 +143,20 @@ Run the 6-dimension diagnostic before recommending equity expansion:
 
 ---
 
-## Part C: Cross-Border & NRI Considerations
+## Part C: Cross-Border & NRI Considerations (UK-India Corridor)
 
 When advising NRIs (e.g. UK residents planning return to India, or Indian residents with UK assets):
-* **Currency Hedging & Remittance**: Pound sterling (£) has historically appreciated against the Indian Rupee (INR) by ~3%–4% annually, compensating for Indian inflation differentials.
-* **Accounts & Taxation**: NRE (tax-free in India, fully repatriable) vs. NRO (taxable in India, restricted repatriation) accounts.
-* **DTAA (Double Tax Avoidance Agreement)**: Ensure foreign tax credits are claimed on UK pensions/dividends remitted to India or vice versa.
+* **Currency Hedging & Remittance (PPP)**: Pound sterling (£) has historically appreciated against the Indian Rupee (INR) by ~3%–4% annually, compensating for Indian inflation differentials:
+  $$\text{Exchange Rate}_T = \text{Exchange Rate}_0 \times \left(\frac{1 + i_{\text{INR}}}{1 + i_{\text{GBP}}}\right)^T$$
+* **Accounts & Taxation**:
+  * **NRE (Non-Resident External)**: 100% tax-free in India under Section 10(4)(ii), fully repatriable. (Reportable as taxable foreign income in UK).
+  * **NRO (Non-Resident Ordinary)**: Taxable in India. Domestic Section 195 TDS is 31.2% (30% + 4% cess). Submitting HMRC Tax Residency Certificate (TRC) + Form 10F reduces withholding under DTAA Article 12 to 15.0%.
+* **UK-India DTAA Treaty Rules**:
+  * **Article 20 (Private & Occupational Pensions)**: Taxable *only* in state of residence. Indian residents file HMRC Form `India-Individual 2004` to receive 'NT' (No Tax) PAYE code in UK.
+  * **Article 19 (Government Pensions)**: Taxable in paying country (UK).
+* **Foreign Tax Credit (FTC)**:
+  * Under Section 90 / Rule 128 (India), file mandatory **Form 67** before ITR due date to claim FTC = $\min(\text{Foreign Tax Paid}, \text{Indian Tax Payable})$.
+  * Under Section 790 TIOPA 2010 (UK), claim double taxation relief up to UK tax payable on foreign income.
 
 ---
 
@@ -169,6 +177,7 @@ All quantitative advisory models are backed by [`scripts/fire_calculator.py`](fi
 * `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000`
 * `python3 scripts/fire_calculator.py crypto-tax --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000`
 * `python3 scripts/fire_calculator.py crypto-tax --jurisdiction uk --gain 15000 --loss 4000 --bracket higher`
+* `python3 scripts/fire_calculator.py cross-border --uk-pension 40000 --india-nro 500000 --rate 105 --has-trc`
 * `python3 scripts/fire_calculator.py profile-template --jurisdiction india --output /path/to/profile.json`
 * `python3 scripts/fire_calculator.py profile-show --file /path/to/profile.json`
 * `python3 scripts/fire_calculator.py profile-list --dir /path/to/profiles_dir/`

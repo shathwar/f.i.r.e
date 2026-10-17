@@ -221,3 +221,35 @@ In India, home loan interest rates typically hover between **8.25% and 9.50%**.
 * **The Strategy**:
   * If home loan interest rate $> 9.0\%$, prepay aggressively (e.g. pay 1 extra EMI per year or increase EMI by 5% annually to cut a 20-year tenure down to 12 years).
   * If interest rate $< 8.5\%$ and client is in the 30% slab under the Old Regime (effectively lowering borrowing cost via Sec 24(b)), invest surplus in equity mutual funds.
+
+---
+
+## 8. Cross-Border DTAA, Currency PPP & NRI Banking Mechanics (UK-India Corridor)
+
+### A. UK-India Double Tax Avoidance Agreement (DTAA)
+1. **Article 20 (Private & Occupational Pensions)**:
+   * Taxable **exclusively in the state of residence**.
+   * If a UK pensioner retires to India (Resident & Ordinarily Resident - ROR): The pension is taxable *only* in India under standard income tax slabs.
+   * **Mandatory Action**: The individual must file HMRC Form **`India-Individual 2004`** with the UK tax authorities to obtain treaty relief and receive an **'NT' (No Tax) PAYE code**, preventing wrongful UK tax deduction at source.
+2. **Article 19 (Government / Civil Service Pensions)**:
+   * Taxable **in the source (paying) state (UK)**.
+   * When declared in India as worldwide income by an ROR, double taxation is eliminated via **Foreign Tax Credit (FTC)** under Section 90.
+3. **Article 12 (Interest Income & Bank Accounts)**:
+   * **NRE Accounts (Non-Resident External)**: Interest is **100% tax-free in India** under **Section 10(4)(ii)** of the Income Tax Act. However, for a UK tax resident, NRE interest forms part of taxable worldwide foreign income.
+   * **NRO Accounts (Non-Resident Ordinary)**:
+     * Domestic default TDS rate under **Section 195**: **30% base + 4% cess = 31.2%**.
+     * With a valid **Tax Residency Certificate (TRC)** issued by HMRC and online **Form 10F**, DTAA Article 12 caps the withholding tax at **15.0%**.
+     * This saves **16.2% of gross income** from being withheld, preventing trapped or uncreditable foreign tax drag.
+
+### B. Foreign Tax Credit (FTC) & Form 67 Compliance
+* Under **Section 90 of the Income Tax Act 1961 read with Rule 128**:
+  $$\text{Foreign Tax Credit Allowed} = \min(\text{Foreign Tax Paid}, \text{Indian Tax Payable on Doubly Taxed Income})$$
+* **Strict Statutory Invariant**: Form 67 must be furnished online on the Income Tax Department portal on or before the due date of filing the ITR under Section 139(1). Failure to file Form 67 in time can lead to denial of foreign tax credit.
+* Under UK rules (**Section 790 TIOPA 2010**), HMRC applies the identical minimum rule: Credit relief is capped at the UK income tax attributable to the foreign income.
+
+### C. Purchasing Power Parity (PPP) Currency Dynamics
+* Over multi-decade retirement horizons, the nominal exchange rate between GBP and INR adjusts according to the inflation differential:
+  $$\text{Exchange Rate}_T = \text{Exchange Rate}_0 \times \left(\frac{1 + i_{\text{INR}}}{1 + i_{\text{GBP}}}\right)^T$$
+* With historical Indian inflation averaging ~6.5% and UK inflation at ~2.5%, the annual inflation differential is $\approx 3.9\%$.
+* A retiree with a fixed £40,000 UK pension will see nominal rupee payouts grow from ₹42.0 Lakhs (at 105) to ~₹61.6 Lakhs after 10 years, preserving purchasing power parity against Indian domestic inflation.
+
