@@ -37,34 +37,50 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 
 ---
 
-## 📁 Skill Package Architecture
+## 📁 Skills Architecture in This Repository
+
+This workspace contains two specialized, complementary financial advisory skills:
 
 ```text
-.agents/skills/fire-advisor/
-├── SKILL.md                 # Primary advisory prompt, CFP persona, contracts & capability runbooks
-├── VERSION                  # 1.5.0
-├── CHANGELOG.md             # Semantic version changelog
-├── references/
-│   ├── uk_tax_wrappers.md   # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
-│   ├── pension_bridge_and_sorr.md # Pre-57 bridge, multi-bucket design, 30% crash & care costs
-│   ├── mortgage_vs_investing.md   # Mathematical models comparing mortgage paydown vs. investing
-│   ├── household_optimization.md  # Spousal allowances, equalizing pots, survivor shock & transfers
-│   ├── india_investments_and_tax.md # MFs, FDs, Gold, Silver, Real Estate, REITs, Old vs New, HRA
-│   ├── crypto_and_digital_assets.md # Digital assets in F.I.R.E., UK HMRC CGT, India Sec 115BBH & 194S
-│   ├── market_data_sources.md       # Primary statutory benchmarks, data lineage, spot vs CAGR
-│   ├── local_profile_storage.md     # Private local JSON profile schema & storage runbook
-│   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
-├── scripts/
-│   └── fire_calculator.py   # Multi-jurisdiction CLI calculation engine (UK & India)
-└── evals/
-    └── eval_cases.json      # Comprehensive evaluation suite (17 test scenarios across UK & India)
+.agents/skills/
+├── fire-advisor/                   # Strategic F.I.R.E. Planning & Wealth Architecture
+│   ├── SKILL.md                    # Primary advisory prompt, CFP persona & runbooks
+│   ├── VERSION                     # 1.5.0
+│   ├── CHANGELOG.md                # Semantic version changelog
+│   ├── references/
+│   │   ├── uk_tax_wrappers.md      # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
+│   │   ├── pension_bridge_and_sorr.md # Pre-57 bridge, multi-bucket design, 30% crash & care costs
+│   │   ├── mortgage_vs_investing.md   # Mathematical models comparing mortgage paydown vs. investing
+│   │   ├── household_optimization.md  # Spousal allowances, equalizing pots, survivor shock & transfers
+│   │   ├── india_investments_and_tax.md # MFs, FDs, Gold, Silver, Real Estate, REITs, Old vs New, HRA
+│   │   ├── crypto_and_digital_assets.md # Digital assets in F.I.R.E., UK HMRC CGT, India Sec 115BBH & 194S
+│   │   ├── market_data_sources.md       # Primary statutory benchmarks, data lineage, spot vs CAGR
+│   │   ├── local_profile_storage.md     # Private local JSON profile schema & storage runbook
+│   │   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
+│   ├── scripts/
+│   │   └── fire_calculator.py      # Multi-jurisdiction CLI calculation engine (UK & India)
+│   └── evals/
+│       └── eval_cases.json         # Comprehensive evaluation suite (17 test scenarios)
+│
+└── equity-rotator/                 # Tactical Sector & Style Equity Rotation Engine
+    ├── SKILL.md                    # Chief Investment Officer (CIO) persona & rotation contracts
+    ├── VERSION                     # 1.0.0
+    ├── CHANGELOG.md                # Semantic version changelog
+    ├── references/
+    │   ├── macro_regimes_and_business_cycle.md # 4-Quadrant macro model & sector sensitivity
+    │   ├── evidence_indicators_and_sentiment.md # FII/DII flows, PCR, VIX, breadth & yield gaps
+    │   └── rotation_playbooks.md   # Tactical sector runbooks & tax-sheltered execution (ISAs/BAFs)
+    ├── scripts/
+    │   └── rotation_engine.py      # Quantitative sector scoring & sentiment CLI engine
+    └── evals/
+        └── eval_cases.json         # Evaluation suite for market regime & rotation signals
 ```
 
 ---
 
 ## 🧮 Running the Multi-Jurisdiction Calculator CLI
 
-You can run direct calculations anytime via Python:
+### F.I.R.E. Advisory Calculations (`fire_calculator.py`)
 
 ```bash
 # --- UK & GLOBAL CALCULATIONS ---
@@ -129,4 +145,26 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-list \
 # 15. Run full F.I.R.E. evaluation & Money Health Score on a stored profile
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-eval \
   --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+```
+
+---
+
+### Tactical Equity Rotation Calculations (`rotation_engine.py`)
+
+```bash
+# 1. Full 5-Factor Sector Rotation Analysis (India)
+python3 .agents/skills/equity-rotator/scripts/rotation_engine.py analyze \
+  --market india --growth accelerating --inflation falling --fii-long-short 0.16 --pcr 1.10
+
+# 2. Evaluate Macro Regime & Business Cycle Sector Mapping
+python3 .agents/skills/equity-rotator/scripts/rotation_engine.py regime \
+  --growth accelerating --inflation falling
+
+# 3. Smart Money Contrarian Sentiment Diagnostic (FII Long/Short, PCR, VIX)
+python3 .agents/skills/equity-rotator/scripts/rotation_engine.py sentiment-check \
+  --fii-long-short 0.15 --pcr 1.45 --vix 16.2
+
+# 4. Smallcap Valuation Froth & Yield Gap Check
+python3 .agents/skills/equity-rotator/scripts/rotation_engine.py spread-check \
+  --small-large-pe 1.28 --breadth-50dma 42.0 --yield-gap 2.70
 ```

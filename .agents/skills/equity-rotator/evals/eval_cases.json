@@ -1,0 +1,78 @@
+{
+  "suite": "equity_rotator_evaluation_suite",
+  "version": "1.0.0",
+  "description": "Evaluation benchmarks for tactical equity rotation, macro regime detection, and evidence-backed inflection signals",
+  "cases": [
+    {
+      "id": "eval_01_fii_extreme_short_squeeze_rotation",
+      "capability": "Contrarian Short Squeeze Pre-Emption",
+      "market": "India",
+      "prompt": "FII Index Futures Long/Short ratio has fallen to 15%, but Nifty is holding its 200-DMA and PCR is 1.45. What tactical sector rotation should I make over the next 3 to 5 trading days?",
+      "expected_criteria": [
+        "Identifies extreme institutional oversold positioning (FII Longs at 15%) vulnerable to an imminent short squeeze",
+        "Confirms high Put-Call Ratio (1.45) as institutional put writing support floor",
+        "Recommends tactical rotation into high-beta Banking & Financials (Nifty Bank / Private Banks) to capture the squeeze",
+        "Specifies invalidation level if Nifty breaks key technical support on heavy cash volumes"
+      ]
+    },
+    {
+      "id": "eval_02_late_cycle_defensive_rotation",
+      "capability": "Late Cycle Defensive Capital Preservation",
+      "market": "India",
+      "prompt": "Leading economic indicators show domestic manufacturing growth slowing down, while food and oil prices are pushing inflation higher. India VIX has jumped to 21. How should I rotate my equity sectors?",
+      "expected_criteria": [
+        "Diagnoses Quadrant 3: Late Cycle (decelerating growth, rising inflation)",
+        "Recommends trimming high-beta cyclicals (Metals, high-debt Real Estate) by 10%",
+        "Recommends overweighting Defensives with domestic pricing power (Nifty FMCG, Nifty Pharma & Healthcare)",
+        "Preserves 70% core buy-and-hold foundation and caps tactical rotation within 20%-30% satellite bucket"
+      ]
+    },
+    {
+      "id": "eval_03_smallcap_froth_de_risking",
+      "capability": "Small-Cap Froth Detection & De-Risking",
+      "market": "India",
+      "prompt": "The Nifty Smallcap 250 index P/E is currently 31.0, while the Nifty 50 P/E is 23.5 (ratio = 1.32x). Market breadth is showing only 41% of stocks above their 50-DMA despite headline indices at record highs. What is the evidence-backed recommendation?",
+      "expected_criteria": [
+        "Highlights severe valuation froth with Smallcap-to-Largecap PE ratio > 1.25x",
+        "Flags market breadth divergence (less than 45% of stocks above 50-DMA while index makes highs)",
+        "Mandates a 25% to 35% tactical trim of Smallcap mutual funds",
+        "Reallocates proceeds into Large-Cap Quality, Flexi-Cap, or Sovereign Gold Bonds"
+      ]
+    },
+    {
+      "id": "eval_04_early_cycle_rate_cut_cyclicals",
+      "capability": "Early Cycle Reflation Playbook",
+      "market": "Global / UK",
+      "prompt": "The Bank of England and Federal Reserve have initiated their rate-cutting cycle while manufacturing PMIs are rebounding from contraction into expansion territory. What is the tactical sector rotation playbook?",
+      "expected_criteria": [
+        "Classifies macro regime as Quadrant 1: Early Cycle (accelerating growth, falling rates)",
+        "Recommends rotating from defensive utilities/staples into growth and cyclicals (Global Tech, Consumer Discretionary, Industrials)",
+        "Advises executing trades inside UK Stocks & Shares ISA to maintain 0% Capital Gains Tax friction",
+        "Provides concrete leading triggers and invalidation metrics"
+      ]
+    },
+    {
+      "id": "eval_05_tax_smart_rotation_india",
+      "capability": "Tax-Smart Mutual Fund Rotation in India",
+      "market": "India",
+      "prompt": "I want to rotate between sectors regularly in India, but I am worried about the 20% Short-Term Capital Gains (STCG) tax on units held under 1 year. How can I implement tactical rotations tax-efficiently?",
+      "expected_criteria": [
+        "Calculates the severe performance drag of paying 20% STCG or 12.5% LTCG on frequent fund switches",
+        "Recommends Balanced Advantage Funds (BAFs) / Dynamic Asset Allocation Funds where internal asset and sector rotation is 100% tax-free to the investor",
+        "Suggests Multi-Asset Allocation Funds for rotating across Equities, Debt, and Gold with zero personal tax trigger until final redemption",
+        "Maintains a strict Core (70% passive/flexicap) and Satellite (30% tactical) portfolio split"
+      ]
+    },
+    {
+      "id": "eval_06_uk_isa_sector_rotation",
+      "capability": "UK Tax-Sheltered Tactical Rotation",
+      "market": "UK",
+      "prompt": "I am a higher-rate taxpayer in London with £100k in my Stocks & Shares ISA and £50k in a General Investment Account (GIA). I want to execute tactical sector rotations. Which account should I use?",
+      "expected_criteria": [
+        "Mandates concentrating all active tactical sector rotations strictly inside the Stocks & Shares ISA (100% exempt from CGT and dividend tax)",
+        "Warns against active sector churn in the taxable GIA due to the small £3,000 annual exemption and 24% CGT rate",
+        "Advises leaving the taxable GIA in passive, buy-and-hold low-turnover global index funds to minimize taxable realization events"
+      ]
+    }
+  ]
+}
