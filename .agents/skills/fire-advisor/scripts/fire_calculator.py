@@ -225,38 +225,134 @@ def household_pension_equalization(household_drawdown: float) -> Dict[str, Any]:
 
 
 def calculate_pension_death_tax(pot_value: float, beneficiary_tax_rate: float = 0.40, 
-                                iht_rate: float = 0.40) -> Dict[str, Any]:
-    """Computes effective death tax on inherited pension vs inherited ISA post-April 2027."""
-    iht_paid_pension = pot_value * iht_rate
-    post_iht_pension = pot_value - iht_paid_pension
-    income_tax_paid = post_iht_pension * beneficiary_tax_rate
-    net_pension_to_heir = post_iht_pension - income_tax_paid
-    effective_pension_tax_rate = (pot_value - net_pension_to_heir) / pot_value
+                                iht_rate: float = 0.40, retiree_tax_rate_during_life: float = 0.20,
+                                estate_value: Optional[float] = None, married_or_civil_partner: bool = True,
+                                spouse_is_beneficiary: bool = False, death_pre_75: bool = False,
+                                has_taxable_gias: bool = False) -> Dict[str, Any]:
+    """
+    Scenario-based decumulation and bequest evaluation post-April 2027.
+    Evaluates whether accelerating pension drawdown vs preserving in pension is optimal,
+    accounting for estate size, nil-rate bands, spousal exemption, beneficiary tax rates,
+    and taxable GIA drag.
+    """
+    total_estate = estate_value if estate_value is not None else pot_value
     
-    iht_paid_isa = pot_value * iht_rate
-    net_isa_to_heir = pot_value - iht_paid_isa
-    effective_isa_tax_rate = iht_rate
+    # 1. Determine Effective IHT Rate on Pension
+    if spouse_is_beneficiary:
+        # Spousal Exemption (Section 18 IHTA 1984): 100% exempt from IHT on first death
+        effective_iht = 0.0
+        iht_reason = "100% Spousal Exemption applies under Section 18 IHTA 1984. Zero IHT on transfer to spouse."
+    else:
+        # Check Nil-Rate Band (£325k single, £650k married) + RNRB (£175k single, £350k married)
+        nrb = 650000.0 if married_or_civil_partner else 325000.0
+        rnrb = 350000.0 if married_or_civil_partner else 175000.0
+        # RNRB taper: reduces by £1 for every £2 estate exceeds £2m
+        if total_estate > 2000000.0:
+            excess_2m = total_estate - 2000000.0
+            taper = excess_2m * 0.50
+            rnrb = max(0.0, rnrb - taper)
+        total_relief_band = nrb + rnrb
+        
+        if total_estate <= total_relief_band:
+            effective_iht = 0.0
+            iht_reason = f"Estate (£{total_estate:,.0f}) is fully within Nil-Rate Bands (£{total_relief_band:,.0f}). 0% IHT payable."
+        else:
+            effective_iht = iht_rate
+            iht_reason = f"Estate (£{total_estate:,.0f}) exceeds Nil-Rate Bands (£{total_relief_band:,.0f}). Marginal {round(iht_rate*100)}% IHT applies."
+
+    # 2. Beneficiary Income Tax (Post-75 vs Pre-75)
+    if death_pre_75:
+        beneficiary_effective_income_tax = 0.0
+        income_tax_reason = "Death occurs before age 75: Beneficiary draws pension 100% income-tax-free (under LSDBA)."
+    else:
+        beneficiary_effective_income_tax = beneficiary_tax_rate
+        income_tax_reason = f"Death occurs post age 75: Beneficiary pays income tax at their marginal rate ({round(beneficiary_tax_rate * 100)}%)."
+
+    # 3. Path A: Retain in Pension Until Death
+    iht_paid_pension = pot_value * effective_iht
+    pot_after_iht = pot_value - iht_paid_pension
+    income_tax_paid_pension = pot_after_iht * beneficiary_effective_income_tax
+    net_pension_to_heir = pot_after_iht - income_tax_paid_pension
+    combined_pension_death_drag = (pot_value - net_pension_to_heir) / pot_value if pot_value > 0 else 0.0
+
+    # 4. Path B: Drawdown During Life at retiree_tax_rate_during_life and Recycle to ISA/Gift
+    cash_in_hand = pot_value * (1.0 - retiree_tax_rate_during_life)
+    isa_iht_paid = cash_in_hand * effective_iht
+    net_isa_recycled_to_heir = cash_in_hand - isa_iht_paid
+    combined_isa_drag = (pot_value - net_isa_recycled_to_heir) / pot_value if pot_value > 0 else 0.0
+
+    # 5. Formulate Scenario-Based Nuanced Recommendation & Exceptions
+    recommendations = []
+    exceptions = []
     
-    advantage_of_isa = net_isa_to_heir - net_pension_to_heir
-    pct_more_wealth = ((net_isa_to_heir - net_pension_to_heir) / net_pension_to_heir) * 100
-    
+    if spouse_is_beneficiary:
+        optimal_strategy = "PRESERVE PENSION (Spouse Beneficiary Exception)"
+        recommendations.append("Do NOT accelerate pension drawdown. The pot transfers to your spouse completely free of IHT under Section 18 IHTA 1984.")
+        exceptions.append("100% Spousal Exemption: Drawing pension early creates immediate 20%-40% income tax drag with zero IHT savings.")
+    elif total_estate <= (650000.0 if married_or_civil_partner else 325000.0):
+        optimal_strategy = "PRESERVE PENSION (Nil-Rate Band Exemption)"
+        recommendations.append("Do NOT accelerate pension drawdown. Your estate is within the Nil-Rate Band, so IHT is 0%.")
+        exceptions.append("Zero IHT Estate: Draining the pension destroys wealth by incurring unnecessary income tax during life.")
+    elif retiree_tax_rate_during_life >= 0.40:
+        optimal_strategy = "CAUTION: HIGH INCOME TAX DRAG"
+        recommendations.append("Do NOT accelerate pension drawdown if it incurs 40% or 60% marginal income tax today.")
+        exceptions.append("Tax Inversion Trap: Paying 40% income tax today to save a potential 40% future IHT yields no net benefit and loses tax-free compounding.")
+    elif has_taxable_gias:
+        optimal_strategy = "DRAIN TAXABLE GIAS FIRST"
+        recommendations.append("Exhaust General Investment Accounts (GIAs) before accelerating pension withdrawals to eliminate ongoing dividend and CGT drag.")
+        exceptions.append("Taxable Wrapper Drag: GIAs suffer ongoing annual tax, whereas pensions compound tax-free.")
+    elif effective_iht > 0 and retiree_tax_rate_during_life <= 0.20 and beneficiary_effective_income_tax >= 0.40:
+        optimal_strategy = "PENSION RECYCLING ACCREDITED"
+        recommendations.append("Draw pension within 20% basic rate band and recycle surplus into ISAs or inter-vivos gifting.")
+        exceptions.append("High-Tax Beneficiary + 40% Estate: Taking income at 20% beats leaving a 64% combined IHT + Higher Rate income tax burden.")
+    else:
+        optimal_strategy = "BALANCED MULTI-WRAPPER DRAWDOWN"
+        recommendations.append("Balance pension drawdown to cover essential spending up to the Personal Allowance / Basic Rate ceiling, preserving tax-sheltered compounding.")
+
     return {
-        "pot_value": pot_value,
-        "beneficiary_tax_rate_percent": beneficiary_tax_rate * 100,
-        "iht_rate_percent": iht_rate * 100,
-        "pension_net_to_heir": round(net_pension_to_heir, 2),
-        "effective_pension_death_tax_percent": round(effective_pension_tax_rate * 100, 1),
-        "isa_net_to_heir": round(net_isa_to_heir, 2),
-        "effective_isa_death_tax_percent": round(effective_isa_tax_rate * 100, 1),
-        "isa_bequest_advantage_pounds": round(advantage_of_isa, 2),
-        "isa_bequest_advantage_percent": round(pct_more_wealth, 1),
-        "decision_rule": "Draw pension during life at 20% basic rate and recycle into ISA to avoid the 64% combined death tax!"
+        "scenario_inputs": {
+            "pot_value": pot_value,
+            "total_estate_value": total_estate,
+            "married_or_civil_partner": married_or_civil_partner,
+            "spouse_is_beneficiary": spouse_is_beneficiary,
+            "death_pre_75": death_pre_75,
+            "retiree_income_tax_rate_during_life": retiree_tax_rate_during_life,
+            "beneficiary_tax_rate_post75": beneficiary_tax_rate,
+            "has_taxable_gias": has_taxable_gias
+        },
+        "iht_and_income_tax_diagnosis": {
+            "effective_iht_rate_on_pension": round(effective_iht * 100, 1),
+            "iht_rationale": iht_reason,
+            "beneficiary_income_tax_rate": round(beneficiary_effective_income_tax * 100, 1),
+            "income_tax_rationale": income_tax_reason
+        },
+        "path_comparison": {
+            "path_a_preserve_in_pension": {
+                "net_bequest_to_heir": round(net_pension_to_heir, 2),
+                "combined_effective_tax_drag_percent": round(combined_pension_death_drag * 100, 1)
+            },
+            "path_b_draw_during_life_and_recycle": {
+                "cash_drawn_post_income_tax": round(cash_in_hand, 2),
+                "net_bequest_if_in_estate": round(net_isa_recycled_to_heir, 2),
+                "combined_effective_tax_drag_percent": round(combined_isa_drag * 100, 1)
+            }
+        },
+        "optimal_strategy": optimal_strategy,
+        "recommendations": recommendations,
+        "explicit_exceptions": exceptions
     }
 
 
-def test_contribution_law(relief_rate: float, retirement_marginal_rate: float, 
-                          pcls_available: bool = True) -> Dict[str, Any]:
-    """Evaluates the r > 0.75m contribution law."""
+def test_contribution_law(relief_rate: float = 0.20, retirement_marginal_rate: float = 0.20, 
+                          pcls_available: bool = True, is_non_earning_spouse: bool = False,
+                          non_earner_annual_contribution: float = 2880.0,
+                          spouse_other_retirement_income: float = 0.0,
+                          partner_pension_pot: float = 0.0) -> Dict[str, Any]:
+    """
+    Evaluates pension contribution efficiency and the r > 0.75m theorem.
+    Explicitly models non-earning spouse scenarios (£2,880 net / £3,600 gross),
+    Personal Allowance arbitrage, and spousal pot equalization exceptions.
+    """
     cost = 1.0 - relief_rate
     if pcls_available:
         payout = 0.25 + (0.75 * (1.0 - retirement_marginal_rate))
@@ -266,8 +362,61 @@ def test_contribution_law(relief_rate: float, retirement_marginal_rate: float,
         breakeven_m = relief_rate
         
     net_return_percent = ((payout - cost) / cost) * 100
-    is_favorable = relief_rate > (0.75 * retirement_marginal_rate if pcls_available else retirement_marginal_rate)
-    
+    formula_favorable = relief_rate > (0.75 * retirement_marginal_rate if pcls_available else retirement_marginal_rate)
+
+    spousal_analysis = None
+    explicit_exceptions = []
+    recommendation = "Contribute (Value accretive)" if formula_favorable else "Exercise Caution / Evaluate Alternatives"
+
+    if is_non_earning_spouse:
+        net_paid = non_earner_annual_contribution
+        basic_relief = net_paid * 0.25  # £2,880 * 0.25 = £720 relief -> £3,600 gross pot
+        gross_pot = net_paid + basic_relief
+        
+        # Test if spouse draws within Personal Allowance (£12,570)
+        pa_remaining = max(0.0, 12570.0 - spouse_other_retirement_income)
+        if pa_remaining >= (gross_pot * 0.75):
+            actual_spousal_return_pct = (basic_relief / net_paid) * 100  # +25.0% instant return
+            spousal_verdict = "STRONGLY ACCRETIVE (+25% Return via Personal Allowance Arbitrage)"
+            explicit_exceptions.append(
+                "Personal Allowance Arbitrage: The non-earning spouse has unused Personal Allowance (£12,570). "
+                "Drawdown is taxed at 0%, yielding an immediate 25% risk-free return on the £2,880 net contribution."
+            )
+        elif retirement_marginal_rate <= 0.20:
+            actual_spousal_return_pct = 6.25  # 25% tax-free + 75% taxed at 20%
+            spousal_verdict = "ACCRETIVE (+6.25% Net Return in Basic Rate Band)"
+            explicit_exceptions.append(
+                "Basic Rate Parity: Even with basic rate tax on exit, 25% tax-free PCLS delivers a net positive +6.25% return."
+            )
+        else:
+            actual_spousal_return_pct = -12.5  # 25% tax free + 75% taxed at 40% = 0.70 payout vs 0.80 cost
+            spousal_verdict = "MARGINALLY DILUTIVE ON PAPER (-12.5% if entire drawdown hits 40% band)"
+            explicit_exceptions.append(
+                "Higher-Rate Exit Condition: Only value-dilutive if the non-earner ALREADY has substantial other guaranteed income "
+                "(e.g. large DB pension or rent) that fully exhausts their Personal Allowance and Basic Rate band."
+            )
+            explicit_exceptions.append(
+                "Spousal Equalization Exception: If the higher-earning partner is approaching lifetime limits or higher-rate drawdown, "
+                "building the non-earner pot equalizes retirement income, utilizing two Personal Allowances and Basic Rate bands."
+            )
+            explicit_exceptions.append(
+                "Alternative Recommendation: If higher-rate exit is genuinely unavoidable, direct the £2,880 into an ISA for tax-free compounding."
+            )
+
+        if partner_pension_pot > 500000.0:
+            explicit_exceptions.append(
+                "Pot Equalization Alpha: Equalizing pots allows the household to extract up to £25,140 tax-free annually across both Personal Allowances."
+            )
+
+        spousal_analysis = {
+            "net_cash_invested": net_paid,
+            "hmrc_basic_rate_topup": basic_relief,
+            "gross_pension_created": gross_pot,
+            "unused_personal_allowance_headroom": pa_remaining,
+            "effective_net_return_percent": actual_spousal_return_pct,
+            "spousal_verdict": spousal_verdict
+        }
+
     return {
         "relief_going_in_percent": relief_rate * 100,
         "retirement_marginal_rate_percent": retirement_marginal_rate * 100,
@@ -276,7 +425,9 @@ def test_contribution_law(relief_rate: float, retirement_marginal_rate: float,
         "net_payout_per_pound_gross": round(payout, 3),
         "immediate_net_return_percent": round(net_return_percent, 2),
         "breakeven_marginal_rate_percent": round(breakeven_m * 100, 1),
-        "verdict": "Contribute (Value accretive)" if is_favorable else "DO NOT Contribute (Value destructive)"
+        "general_verdict": recommendation,
+        "spousal_non_earner_assessment": spousal_analysis,
+        "explicit_exceptions_and_context": explicit_exceptions
     }
 
 
@@ -1500,12 +1651,21 @@ def main():
     p_deathtax.add_argument("--pot", type=float, required=True, help="Pension pot value")
     p_deathtax.add_argument("--beneficiary-rate", type=float, default=0.40, help="Beneficiary marginal rate (default 0.40)")
     p_deathtax.add_argument("--iht-rate", type=float, default=0.40, help="IHT rate (default 0.40)")
+    p_deathtax.add_argument("--retiree-rate", type=float, default=0.20, help="Retiree income tax rate if drawn during life (default 0.20)")
+    p_deathtax.add_argument("--estate", type=float, default=None, help="Total estate value including property and pension")
+    p_deathtax.add_argument("--single", action="store_true", help="Set if single/unmarried (defaults to married/civil partner)")
+    p_deathtax.add_argument("--spouse-beneficiary", action="store_true", help="Set if spouse/civil partner is the beneficiary (100 percent IHT exempt)")
+    p_deathtax.add_argument("--death-pre-75", action="store_true", help="Set if modeling death before age 75 (income tax free to heir)")
+    p_deathtax.add_argument("--has-gias", action="store_true", help="Set if household holds taxable GIAs")
 
-    # Contrib Test (r > 0.75m)
-    p_contrib = subparsers.add_parser("contrib-test", help="Test r > 0.75m contribution law")
-    p_contrib.add_argument("--relief", type=float, required=True, help="Tax relief going in (e.g. 0.20 or 0.40)")
-    p_contrib.add_argument("--marginal-out", type=float, required=True, help="Marginal rate in drawdown (e.g. 0.20 or 0.40)")
+    # Contrib Test (r > 0.75m & Non-Earner)
+    p_contrib = subparsers.add_parser("contrib-test", help="Test pension contribution efficiency and non-earning spouse rules")
+    p_contrib.add_argument("--relief", type=float, default=0.20, help="Tax relief going in (default 0.20)")
+    p_contrib.add_argument("--marginal-out", type=float, default=0.20, help="Marginal rate in drawdown (default 0.20)")
     p_contrib.add_argument("--no-pcls", action="store_true", help="Set if PCLS is unavailable")
+    p_contrib.add_argument("--non-earner", action="store_true", help="Model non-earning spouse (£2,880 net / £3,600 gross)")
+    p_contrib.add_argument("--spouse-other-income", type=float, default=0.0, help="Non-earning spouse's other retirement income (£)")
+    p_contrib.add_argument("--partner-pot", type=float, default=0.0, help="Higher-earning partner's pension pot")
 
     # Survivor Shock
     p_survivor = subparsers.add_parser("survivor", help="Model first death survivor shock")
@@ -1619,9 +1779,16 @@ def main():
     elif args.command == "household":
         res = household_pension_equalization(args.drawdown)
     elif args.command == "death-tax":
-        res = calculate_pension_death_tax(args.pot, args.beneficiary_rate, args.iht_rate)
+        res = calculate_pension_death_tax(args.pot, beneficiary_tax_rate=args.beneficiary_rate,
+                                          iht_rate=args.iht_rate, retiree_tax_rate_during_life=args.retiree_rate,
+                                          estate_value=args.estate, married_or_civil_partner=not args.single,
+                                          spouse_is_beneficiary=args.spouse_beneficiary,
+                                          death_pre_75=args.death_pre_75, has_taxable_gias=args.has_gias)
     elif args.command == "contrib-test":
-        res = test_contribution_law(args.relief, args.marginal_out, not args.no_pcls)
+        res = test_contribution_law(args.relief, args.marginal_out, pcls_available=not args.no_pcls,
+                                    is_non_earning_spouse=args.non_earner,
+                                    spouse_other_retirement_income=args.spouse_other_income,
+                                    partner_pension_pot=args.partner_pot)
     elif args.command == "survivor":
         res = calculate_survivor_shock(args.spend, args.sp1, args.sp2, args.db)
     elif args.command == "india-tax":

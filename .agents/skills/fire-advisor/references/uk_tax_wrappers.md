@@ -23,41 +23,49 @@ This guide details the tax mechanics, contribution rules, and withdrawal dynamic
   * 40% Income Tax + 20% lost Personal Allowance value + 2% Employee NI = **62% marginal tax**.
 * **F.I.R.E. Strategy**: Every £1 contributed to a pension in this bracket yields an immediate 60%–62% return by restoring the Personal Allowance.
 
-### The Fundamental Contribution Law: $r > 0.75m$
+### The Fundamental Contribution Law: $r > 0.75m$ & Non-Earner Nuances
 * A pound of pension pot costs $(1 - r)$ in foregone take-home pay (where $r$ is relief going in).
 * With PCLS available (25% tax-free, 75% taxed at retirement marginal rate $m$), it comes out worth:
   $$\text{Value at Drawdown} = 0.25 + 0.75(1 - m)$$
 * **Break-Even Marginal Drawdown Rate**:
   $$m_{\text{break-even}} = \frac{r}{0.75} \quad (\approx 26.7\% \text{ for basic rate } r=20\%)$$
-* **Implications**:
-  * For basic-rate taxpayers ($r=20\%$), contributing makes sense if drawn at basic rate (+6.25% instant gain) or within Personal Allowance (+25% gain).
-  * If a non-earning spouse will retire into higher-rate tax (e.g. from a generous DB scheme), paying £2,880 net into their pension **destroys money (-12.5%)**. Always check projected retirement tax brackets!
+* **Context & Explicit Exceptions for Non-Earning Spouses**:
+  * Under Section 188 of the Finance Act 2004, an individual with no relevant UK earnings can contribute up to **£2,880 net**, and HMRC adds **£720 basic-rate tax relief (20%)** to create a **£3,600 gross** pot.
+  * **Personal Allowance Arbitrage (+25.0% Risk-Free Return)**: If the non-earning spouse has no or modest other taxable income in early retirement, the first **£12,570/year** drawn from their pension is covered by their Personal Allowance (0% income tax) + 25% PCLS. Contributing £2,880 net to withdraw £3,600 tax-free yields an immediate **+25.0% return**!
+  * **Spousal Pot Equalization**: Building a pension for a non-earning spouse equalizes household retirement income, allowing the couple to utilize **two Personal Allowances (£25,140/yr combined tax-free)** and **two Basic Rate bands (£100,540/yr combined taxed at only 20%)**, avoiding 40% higher rate tax on a concentrated pot.
+  * **When Caution Applies**: Contributing £2,880 only becomes dilutive (-12.5%) if the non-earner *already* has substantial other guaranteed taxable income (e.g., large DB pension or buy-to-let profits) that fully exhausts their Personal Allowance and pushes 100% of the DC pension withdrawals into the 40% higher-rate band. Even then, compare against ISA alternatives rather than issuing an absolute prohibition.
 
 ---
 
-## 2. April 2027 Inverts the Traditional Decumulation Advice
+## 2. Scenario-Based Decumulation: April 2027 IHT & Multi-Wrapper Sequencing
 
-### The Old Rule vs. The New Rule
-* **The Old Advice ("Pensions Last")**: Spend ISAs first, leave private pensions untouched because pensions sat outside the estate for Inheritance Tax (IHT).
-* **The New Rule ("Pensions First")**: From **6 April 2027 (Finance Act 2026)**, unused pension funds enter the deceased's estate for IHT.
+### Why "Pensions First" is NOT an Unconditional Rule
+From **6 April 2027 (Finance Act 2026)**, unused pension funds are brought into the deceased's estate for Inheritance Tax (IHT). However, prescribing "Pensions First" as an absolute rule is flawed because the optimal decumulation sequencing depends on **current income tax brackets, estate size, beneficiary circumstances, spending needs, and other assets**.
 
-### The Death Tax Math: Inherited Pension vs. Inherited ISA
-Upon death after age 75, beneficiaries pay income tax at their own marginal rate on pension withdrawals. When stacked with 40% IHT, the effective tax rate is:
-$$\text{Net Received} = (1 - \text{IHT}) \times (1 - \text{Beneficiary Tax Rate})$$
+### The 5 Core Decision Factors & Explicit Exceptions
 
-| Beneficiary Marginal Rate | Effective Tax on Inherited Pension | Effective Tax on Inherited ISA |
-| :--- | :--- | :--- |
-| **Basic Rate (20%)** | **52.0%** | **40.0%** |
-| **Higher Rate (40%)** | **64.0%** | **40.0%** |
-| **Additional Rate (45%)** | **67.0%** | **40.0%** |
+1. **The Spousal Exemption Exception (Section 18 IHTA 1984)**:
+   * Transfers between spouses or civil partners on first death are **100% exempt from IHT**.
+   * If your intended beneficiary is your spouse, unspent pensions pass completely tax-free on first death. Accelerating pension drawdown during life triggers unnecessary 20%–40% income tax today with **zero IHT savings**.
+2. **The Estate Size & Nil-Rate Band Exception**:
+   * If the combined estate (including property and unused pensions) is within the Nil-Rate Band (£325,000 single, £650,000 married) plus Residence Nil-Rate Band (up to £175,000 single, £350,000 married = up to **£1,000,000** for a couple), **IHT is 0%**!
+   * Liquidating a pension to avoid an IHT charge that would never apply destroys wealth via premature income tax.
+3. **The Marginal Income Tax Trap**:
+   * Draining a pension rapidly to "avoid future IHT" can push the retiree into the 40% or 45% income tax brackets, or trigger the 60% marginal tax trap (£100k–£125,140).
+   * Paying 40%–60% income tax today to save a potential future 40% IHT is counterproductive and sacrifices years of tax-free compounding.
+4. **Beneficiary Circumstances & Pre-75 vs. Post-75 Death**:
+   * **Death Before Age 75**: Beneficiaries draw pension income **100% tax-free** (subject to the £1,073,100 LSDBA).
+   * **Beneficiary Tax Rates Post-75**: If your beneficiaries are basic-rate (20%) or non-earning taxpayers (e.g. adult children in entry jobs or grandchildren at university), pension withdrawals will be taxed at 0% or 20% in their hands—not 40%.
+5. **Taxable Wrapper Drag (GIAs vs. Pensions)**:
+   * General Investment Accounts (GIAs) suffer ongoing drag: dividends are taxed at 8.75%/33.75%/39.35% (above a tiny £500 allowance) and capital gains are taxed at 18%/24% (above £3,000).
+   * Exhausting taxable GIAs first is almost always mathematically superior to draining tax-sheltered pensions.
 
-> **The Golden Decumulation Decision Rule**:
-> **Move money from Pension to ISA during life whenever your current marginal tax rate is lower than your beneficiary's expected marginal tax rate later ($m_{\text{retiree}} < b_{\text{beneficiary}}$).**
-
-* *Worked Example*: If you are a retired basic-rate taxpayer (20%) with adult children working in higher-rate bands (40%):
-  * Drawing £1,000 from your pension incurs 20% tax (£200), leaving £800 to fund spending or recycle into your £20,000 ISA. At your death, the £800 ISA bears 40% IHT $\rightarrow$ Children receive **£480**.
-  * If you leave the £1,000 in your pension untouched, it bears 40% IHT and 40% income tax $\rightarrow$ Children receive **£360**.
-  * **Systematic pension drawdown preserves 33% more wealth for heirs!**
+### When Pension Recycling IS Advantageous
+Pension drawdown and recycling into ISAs or inter-vivos gifting is mathematically accredited when **all** of the following hold:
+* The estate clearly exceeds Nil-Rate Bands (£1M+ for a couple) and will pay 40% IHT on second death.
+* The retiree can draw pension income within their **Personal Allowance (0%) or Basic Rate band (20%)**.
+* The beneficiaries are higher-rate (40%) or additional-rate (45%) taxpayers inheriting post-75.
+* Surplus cash drawn can be sheltered inside £20k/yr ISAs or gifted under normal expenditure out of income rules.
 
 ---
 

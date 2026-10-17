@@ -229,6 +229,18 @@
         "Calculates the exact Section 87A marginal relief formula for taxable income slightly exceeding ₹12 Lakhs, capping tax payable before cess to the income exceeding ₹12L",
         "Demonstrates the versioned tax model supporting AY 2026-27 (default) and legacy AY 2025-26"
       ]
+    },
+    {
+      "id": "eval_20_uk_scenario_decumulation_and_spousal_exceptions",
+      "capability": "UK Scenario-Based Decumulation & Spousal Contribution Exceptions",
+      "jurisdiction": "UK",
+      "prompt": "With the April 2027 inheritance tax changes bringing pensions into the estate, should I always draw down my pension first? And my partner has no earned income—should we never fund their pension if we might retire into higher tax?",
+      "expected_criteria": [
+        "Rejects unconditional 'Pensions First' rule: explains that optimal decumulation depends on estate size, Nil-Rate Bands (£325k-£1M), spousal exemption, current retiree tax rate, beneficiary tax rate, and GIA holdings",
+        "Identifies explicit exceptions where preserving pensions is superior: spousal beneficiaries (100% IHT exempt on first death), estates within nil-rate bands (0% IHT), and avoiding higher/60% marginal tax spikes during life",
+        "Rejects unconditional prohibition against non-earner pensions: demonstrates Personal Allowance Arbitrage yielding an immediate +25% return (£2,880 net -> £3,600 tax-free) when drawn within the £12,570 allowance",
+        "Highlights spousal pot equalization allowing the household to extract up to £25,140 tax-free annually across both Personal Allowances"
+      ]
     }
   ]
 }

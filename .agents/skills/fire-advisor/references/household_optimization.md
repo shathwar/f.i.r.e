@@ -69,8 +69,11 @@ Most simplistic retirement models assume partners die on the same day at age 90 
   * A working partner can pay funds directly into a non-working partner's personal pension or SIPP.
   * Tax relief is granted based on the *member's* tax status.
 * **The £3,600 Gross Limit**:
-  * Any UK individual without relevant earnings can contribute **£2,880 net**, which HMRC automatically tops up with basic rate relief (£720) to **£3,600 gross**.
-  * **The Rule Check**: Before contributing, check if the member will retire in higher-rate tax (e.g. large DB scheme). Under the $r > 0.75m$ rule, if $m = 40\%$, paying into a non-earner pension destroys money. If $m \le 20\%$, it yields an immediate +6.25% to +25% return.
+  * **Scenario-Based Mathematical Assessment & Explicit Exceptions**:
+    1. **Personal Allowance Arbitrage (+25.0% Return)**: If the non-earning spouse will draw pension income within their £12,570 Personal Allowance in early retirement, the entire drawdown is 100% tax-free! Paying £2,880 net to withdraw £3,600 tax-free yields an immediate **+25.0% risk-free return**.
+    2. **Basic Rate Parity (+6.25% Return)**: If drawn at the 20% basic rate, the 25% tax-free PCLS ensures an immediate +6.25% net gain.
+    3. **Household Pot Equalization**: Building a dedicated pot for the non-earning partner enables the household to utilize **two Personal Allowances (£25,140/yr combined tax-free)** and **two Basic Rate bands (£100,540/yr combined at 20%)**, preventing the earning partner from bearing 40% higher-rate tax on a single concentrated pot.
+    4. **When Caution Applies**: Only in the narrow circumstance where the non-earner *already* has substantial other guaranteed income (e.g., large DB pension or rental income) that completely consumes their Personal Allowance and pushes 100% of the DC withdrawals into the 40% higher-rate band does the math become dilutive (-12.5%). Even then, compare against directing the £2,880 into an ISA for tax-free compounding rather than imposing an unconditional prohibition.
 
 ---
 

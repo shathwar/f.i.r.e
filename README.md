@@ -12,12 +12,12 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 * **FIRE Target & SWR**: Sizing portfolios with 3.25%–3.50% safe withdrawal rates.
 * **Pre-57 Pension Bridge**: Funding early retirement before NMPA 57 using a 3-bucket ISA/cash architecture.
 * **Tax Optimization & 60% Trap**: Reclaiming personal allowance between £100k–£125k via Salary Sacrifice/SIPP (+62% relief).
-* **April 2027 IHT Inversion ("Pensions First")**: Drawing down pensions to the £50,270 basic band (20% tax) to avoid the 64% death tax post-75, and recycling surplus into ISAs.
+* **April 2027 IHT & Scenario-Based Decumulation**: Models multi-wrapper decumulation based on estate size, Nil-Rate Bands (£325k–£1,000,000), 100% Spousal Exemption on first death, retiree vs. heir tax brackets, and draining taxable GIAs before pensions.
 * **First Death & Survivor Shock**: Modeling the loss of 1 personal allowance, 1 state pension, and DB pension halving.
 
 ### 🇮🇳 India (Bharat) & NRI F.I.R.E. Focus
 * **India FIRE Calculus**: Compounding expenses at **6.5% inflation** with a conservative **3.0%–3.3% SWR**; outputs corpus targets in ₹ Crores and calculates monthly equity SIP gaps at 12% CAGR.
-* **Tax Optimization (Old vs. New Regime)**: Accurate slabs for FY 24-25 / FY 25-26 with Section 87A rebate, standard deduction (₹75k New vs ₹50k Old), 80C, 80CCD(1B) NPS, 80D, 24(b), and HRA exemption formula.
+* **Tax Optimization (Versioned AY 2026-27 & CTC Distinction)**: Official guidance for AY 2026-27 (Union Budget 2025) with ₹12 Lakh Taxable Income Section 87A rebate threshold (zero tax up to ₹12.75L Gross Salary), statutory marginal relief, revised slabs up to ₹24L, and rigorous distinction between CTC, Gross Salary, and Taxable Income.
 * **Couple's Optimization**: Strategic HRA claims by higher-earning spouse and joint home loan double-dipping (₹4L interest / ₹3L principal deductions).
 * **Loan Prepayment vs. Equity SIP**: Reducing-balance monthly compounding EMI simulator; shows tenure reduction and lakhs saved in interest.
 * **The Protection-First Rule**: Enforces the Arth Protocol—never prescribes aggressive equity SIPs without a 6-month Emergency Shield and 15x–20x Pure Term Life Insurance.
