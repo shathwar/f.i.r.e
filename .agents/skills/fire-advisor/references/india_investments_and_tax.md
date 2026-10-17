@@ -107,38 +107,93 @@ $$\text{Cost of Borrowing (8.75\%)} \gg \text{Cost of Renting (2.50\%)}$$
 
 ---
 
-## 5. Tax Optimization: Old vs. New Tax Regime
+## 5. Tax Optimization: Versioned Regimes (AY 2026-27 vs. Legacy AY 2025-26)
 
-### Tax Slabs (FY 2024-25 / FY 2025-26)
+### The Essential Invariant: CTC vs. Gross Salary vs. Taxable Income
 
-#### New Tax Regime (Default)
-* Standard Deduction: **₹75,000** for salaried employees.
-* Section 87A Rebate: Full tax rebate if taxable income $\le ₹7,00,000$ (effective tax zero up to ₹7.75 Lakh CTC).
-* Slabs:
-  * Up to ₹3,00,000: **Nil**
-  * ₹3,00,001 – ₹7,00,000: **5%**
-  * ₹7,00,001 – ₹10,00,000: **10%**
-  * ₹10,00,001 – ₹12,00,000: **15%**
-  * ₹12,00,001 – ₹15,00,000: **20%**
-  * Above ₹15,00,000: **30%**
-  * *Health & Education Cess*: 4% on tax.
+In financial advising, **CTC (Cost to Company), Gross Salary, and Taxable Income are NEVER interchangeable**:
 
-#### Old Tax Regime (With Deductions)
+1. **Cost to Company (CTC)**:
+   * The total annual expenditure incurred by the employer.
+   * Includes components that are **statutorily excluded or exempt** from annual taxable gross salary:
+     * **Employer's EPF Contribution**: 12% of basic salary (exempt under Section 17(2)(vii) up to ₹7.5 Lakhs combined across EPF, NPS, and superannuation).
+     * **Gratuity Accrual**: Statutory reserve under Payment of Gratuity Act (~4.81% of basic), paid only upon separation or retirement.
+     * **Group Medical Insurance**: Employer-paid corporate floater premium.
+2. **Gross Taxable Salary (Form 16 Part B)**:
+   $$\text{Gross Taxable Salary} = \text{CTC} - (\text{Employer EPF} + \text{Gratuity Accrual} + \text{Corporate Group Insurance})$$
+   * Typically, Gross Taxable Salary is **~88% to 92% of CTC**.
+3. **Net Taxable Income**:
+   $$\text{Taxable Income} = \text{Gross Taxable Salary} - \text{Statutory Deductions}$$
+   * **Crucial Rule**: The Section 87A Rebate applies strictly on **Net Taxable Income**, NOT on CTC!
+   * Because of the ₹75,000 Standard Deduction under the New Regime, an individual with a **Gross Salary of ₹12,75,000** has a Taxable Income of ₹12,00,000 and pays **₹0 tax**.
+   * When accounting for employer EPF and gratuity, an employee with a **CTC of ~₹13.5 Lakhs to ₹14 Lakhs** incurs **ZERO tax**!
+
+---
+
+### New Tax Regime (Default, AY 2026-27 / Union Budget 2025)
+
+The official Indian tax framework for Assessment Year 2026-27 (Financial Year 2025-26 onwards):
+
+* **Standard Deduction**: **₹75,000** for salaried individuals (remains non-applicable to business/professionals).
+* **Section 87A Rebate Threshold**: **₹12,00,000 Taxable Income**.
+  * Base tax on ₹12,00,000 taxable income is **₹60,000** (₹20,000 in the 4L–8L slab + ₹40,000 in the 8L–12L slab).
+  * Section 87A provides a **100% tax rebate of up to ₹60,000**, resulting in **₹0 tax payable** for taxable income up to ₹12,00,000!
+* **Section 87A Statutory Marginal Relief**:
+  * Prevents a "cliff tax" when taxable income slightly exceeds ₹12,00,000.
+  * **Statutory Formula**: If Taxable Income $> ₹12,00,000$, the total tax payable (before cess) **cannot exceed the excess of taxable income over ₹12,00,000**:
+    $$\text{Tax Payable (before cess)} = \min\left(\text{Computed Slab Tax}, \;\text{Taxable Income} - ₹12,00,000\right)$$
+    $$\text{Marginal Relief} = \max\left(0, \;\text{Computed Slab Tax} - (\text{Taxable Income} - ₹12,00,000)\right)$$
+  * *Worked Example*: Taxable Income = ₹12,20,000 (Gross Salary ₹12,95,000):
+    * Unrelieved slab tax: ₹60,000 + (15% of ₹20,000) = ₹63,000.
+    * Excess income over ₹12L = ₹20,000.
+    * Marginal Relief = ₹63,000 - ₹20,000 = **₹43,000**.
+    * Tax payable before cess = **₹20,000**; plus 4% cess = **₹20,800** total tax.
+    * Marginal relief phases out at **₹12,70,588** Taxable Income (where slab tax matches excess income).
+* **Revised Slabs (AY 2026-27)**:
+  * Up to ₹4,00,000: **Nil**
+  * ₹4,00,001 – ₹8,00,000: **5%** (Max ₹20,000)
+  * ₹8,00,001 – ₹12,00,000: **10%** (Max ₹40,000 $\rightarrow$ Rebated to ₹0)
+  * ₹12,00,001 – ₹16,00,000: **15%** (Max ₹60,000)
+  * ₹16,00,001 – ₹20,00,000: **20%** (Max ₹80,000)
+  * ₹20,00,001 – ₹24,00,000: **25%** (Max ₹1,00,000)
+  * Above ₹24,00,000: **30%**
+  * *Health & Education Cess*: 4% on net tax.
+
+---
+
+### Legacy New Tax Regime (AY 2025-26 / FY 2024-25)
+
+For prior tax years or historical audits (`--ay 2025-26`):
+* Standard Deduction: ₹75,000.
+* Section 87A Rebate: Up to **₹7,00,000 Taxable Income** (zero tax up to ₹7.75L Gross Salary).
+* Slabs: 0-3L: Nil | 3L-7L: 5% | 7L-10L: 10% | 10L-12L: 15% | 12L-15L: 20% | >15L: 30%.
+
+---
+
+### Old Tax Regime (With Deductions)
+
+Available in both AY 2025-26 and AY 2026-27:
 * Standard Deduction: **₹50,000**.
-* Section 87A Rebate: Up to ₹5,00,000.
+* Section 87A Rebate: Up to **₹5,00,000 Taxable Income** (max rebate ₹12,500).
 * Slabs: Up to ₹2.5L: Nil | ₹2.5L–₹5L: 5% | ₹5L–₹10L: 20% | Above ₹10L: 30%.
 * Key Deductions:
   * **Section 80C**: Up to ₹1,50,000 (EPF, PPF, ELSS, Life insurance, Principal on home loan).
-  * **Section 80CCD(1B)**: Up to ₹50,000 in NPS.
+  * **Section 80CCD(1B)**: Up to ₹50,000 in NPS Tier-1.
   * **Section 80D**: Up to ₹25,000 (self/family) + ₹50,000 (senior citizen parents) for health insurance.
-  * **Section 24(b)**: Up to ₹2,00,000 for home loan interest.
+  * **Section 24(b)**: Up to ₹2,00,000 for self-occupied home loan interest.
+  * **Section 80CCD(2)**: Employer NPS contribution (up to 14% of basic for govt, 10% or 14% for private; deductible in both Old and New regimes).
   * **House Rent Allowance (HRA)** exemption:
     $$\text{HRA Exemption} = \min\begin{cases} \text{Actual HRA Received} \\ \text{Rent Paid} - (10\% \times \text{Basic Salary}) \\ 50\% \text{ of Basic (Metro) or } 40\% \text{ (Non-Metro)} \end{cases}$$
 
-### The Break-Even Rule (Old vs. New Regime)
-For gross income $> ₹15 \text{ Lakhs}$:
-* If total eligible deductions (80C + 80D + 24(b) + HRA + NPS) **exceed ₹3.75 Lakhs – ₹4.0 Lakhs**, the **Old Regime wins**.
-* If total deductions are below ₹3.75 Lakhs, the **New Regime wins** with zero paperwork and lower slab rates.
+---
+
+### The Revised Break-Even Rule (AY 2026-27)
+
+Under AY 2026-27:
+* With the ₹12 Lakh rebate, 15% tax between 12L and 16L, and 20% tax between 16L and 20L, the **New Tax Regime is overwhelmingly superior for incomes up to ₹20–₹25 Lakhs** unless a taxpayer has exceptional deductions.
+* **Break-Even Deduction Threshold**:
+  * For Gross Salaries above ₹15–₹20 Lakhs, the Old Regime only wins if total deductions (HRA + 80C + 80D + 24(b) + NPS) **exceed ₹5,00,000 to ₹6,50,000/year** (e.g. paying high Metro rent like ₹40k+/month AND servicing a large home loan).
+  * For anyone with standard deductions (80C ₹1.5L + 80D ₹25k = ₹1.75L), the **New Regime produces massive tax savings of ₹50,000 to ₹1,80,000/year**.
 
 ---
 

@@ -313,43 +313,167 @@ def calculate_survivor_shock(household_spend: float, p1_state_pension: float = 1
 # INDIA (BHARAT) FINANCIAL & TAX MODULES (ARTHMITRA BORROWINGS)
 # ==============================================================================
 
+def compute_new_regime_tax(taxable_income: float, ay: str = "2026-27") -> Dict[str, Any]:
+    """
+    Computes tax under the New Tax Regime according to the specified Assessment Year.
+    Supports AY 2026-27 (Union Budget 2025: ₹12L rebate + marginal relief + revised slabs)
+    and AY 2025-26 (Legacy: ₹7L rebate + slabs up to ₹15L).
+    """
+    taxable = max(0.0, taxable_income)
+    
+    if ay == "2026-27":
+        # AY 2026-27 Slabs (Budget 2025):
+        # 0 - 4L: Nil
+        # 4L - 8L: 5% (max 20,000)
+        # 8L - 12L: 10% (max 40,000) -> cumulative 60,000 at 12L
+        # 12L - 16L: 15% (max 60,000)
+        # 16L - 20L: 20% (max 80,000)
+        # 20L - 24L: 25% (max 1,00,000)
+        # Above 24L: 30%
+        slab_tax = 0.0
+        rem = taxable
+        if rem > 2400000:
+            slab_tax += (rem - 2400000) * 0.30
+            rem = 2400000
+        if rem > 2000000:
+            slab_tax += (rem - 2000000) * 0.25
+            rem = 2000000
+        if rem > 1600000:
+            slab_tax += (rem - 1600000) * 0.20
+            rem = 1600000
+        if rem > 1200000:
+            slab_tax += (rem - 1200000) * 0.15
+            rem = 1200000
+        if rem > 800000:
+            slab_tax += (rem - 800000) * 0.10
+            rem = 800000
+        if rem > 400000:
+            slab_tax += (rem - 400000) * 0.05
+        
+        rebate_87a = 0.0
+        marginal_relief = 0.0
+        tax_after_relief = slab_tax
+        
+        if taxable <= 1200000:
+            rebate_87a = slab_tax
+            tax_after_relief = 0.0
+        else:
+            # Section 87A Marginal Relief:
+            # Tax payable cannot exceed excess of taxable income over ₹12,00,000
+            excess_income = taxable - 1200000.0
+            if slab_tax > excess_income:
+                marginal_relief = slab_tax - excess_income
+                tax_after_relief = excess_income
+        
+        cess = tax_after_relief * 0.04
+        total_tax = tax_after_relief + cess
+        
+        return {
+            "assessment_year": "AY 2026-27 (FY 2025-26)",
+            "taxable_income": round(taxable, 2),
+            "slab_tax_before_relief": round(slab_tax, 2),
+            "sec_87a_rebate": round(rebate_87a, 2),
+            "marginal_relief_87a": round(marginal_relief, 2),
+            "tax_payable_before_cess": round(tax_after_relief, 2),
+            "cess_4_percent": round(cess, 2),
+            "total_tax": round(total_tax, 2),
+            "effective_tax_rate_pct": round((total_tax / taxable * 100) if taxable > 0 else 0.0, 2),
+            "rebate_threshold": "₹12,00,000 Taxable Income (0 tax up to ₹12.75L Gross Salary with Standard Deduction)"
+        }
+    else:
+        # AY 2025-26 (Legacy FY 2024-25 / FY 2025-26):
+        # 0 - 3L: Nil | 3L - 7L: 5% | 7L - 10L: 10% | 10L - 12L: 15% | 12L - 15L: 20% | > 15L: 30%
+        slab_tax = 0.0
+        rem = taxable
+        if rem > 1500000:
+            slab_tax += (rem - 1500000) * 0.30
+            rem = 1500000
+        if rem > 1200000:
+            slab_tax += (rem - 1200000) * 0.20
+            rem = 1200000
+        if rem > 1000000:
+            slab_tax += (rem - 1000000) * 0.15
+            rem = 1000000
+        if rem > 700000:
+            slab_tax += (rem - 700000) * 0.10
+            rem = 700000
+        if rem > 300000:
+            slab_tax += (rem - 300000) * 0.05
+        
+        rebate_87a = 0.0
+        marginal_relief = 0.0
+        tax_after_relief = slab_tax
+        if taxable <= 700000:
+            rebate_87a = slab_tax
+            tax_after_relief = 0.0
+        else:
+            excess_income = taxable - 700000.0
+            if slab_tax > excess_income:
+                marginal_relief = slab_tax - excess_income
+                tax_after_relief = excess_income
+        
+        cess = tax_after_relief * 0.04
+        total_tax = tax_after_relief + cess
+        return {
+            "assessment_year": "AY 2025-26 (FY 2024-25)",
+            "taxable_income": round(taxable, 2),
+            "slab_tax_before_relief": round(slab_tax, 2),
+            "sec_87a_rebate": round(rebate_87a, 2),
+            "marginal_relief_87a": round(marginal_relief, 2),
+            "tax_payable_before_cess": round(tax_after_relief, 2),
+            "cess_4_percent": round(cess, 2),
+            "total_tax": round(total_tax, 2),
+            "effective_tax_rate_pct": round((total_tax / taxable * 100) if taxable > 0 else 0.0, 2),
+            "rebate_threshold": "₹7,00,000 Taxable Income (0 tax up to ₹7.75L Gross Salary with Standard Deduction)"
+        }
+
+
 def calculate_india_tax(gross_income: float, basic_salary: float = 0.0, hra_received: float = 0.0,
                         rent_paid: float = 0.0, is_metro: bool = True, sec_80c: float = 0.0,
-                        sec_80ccd_1b: float = 0.0, sec_80d: float = 0.0, sec_24b: float = 0.0) -> Dict[str, Any]:
+                        sec_80ccd_1b: float = 0.0, sec_80d: float = 0.0, sec_24b: float = 0.0,
+                        ay: str = "2026-27", is_ctc: bool = False, employer_pf: float = 0.0,
+                        employer_nps_80ccd2: float = 0.0) -> Dict[str, Any]:
     """
-    Compares Old vs New Tax Regime for Indian residents (FY24-25 / FY25-26).
-    Includes ₹75k standard deduction (New) vs ₹50k (Old), Section 87A rebate, and HRA min formula.
-    """
-    # 1. New Tax Regime (Default)
-    std_ded_new = 75000.0
-    taxable_new = max(0.0, gross_income - std_ded_new)
+    Compares Old vs New Tax Regime for Indian residents under versioned statutory rules.
+    Accurately distinguishes CTC, Gross Taxable Salary, and Net Taxable Income.
     
-    # Slabs: 0-3L (0%), 3L-7L (5%), 7L-10L (10%), 10L-12L (15%), 12L-15L (20%), >15L (30%)
-    tax_new = 0.0
-    if taxable_new > 1500000:
-        tax_new += (taxable_new - 1500000) * 0.30 + 300000 * 0.20 + 200000 * 0.15 + 300000 * 0.10 + 400000 * 0.05
-    elif taxable_new > 1200000:
-        tax_new += (taxable_new - 1200000) * 0.20 + 200000 * 0.15 + 300000 * 0.10 + 400000 * 0.05
-    elif taxable_new > 1000000:
-        tax_new += (taxable_new - 1000000) * 0.15 + 300000 * 0.10 + 400000 * 0.05
-    elif taxable_new > 700000:
-        tax_new += (taxable_new - 700000) * 0.10 + 400000 * 0.05
-    elif taxable_new > 300000:
-        tax_new += (taxable_new - 300000) * 0.05
+    Supports:
+    - AY 2026-27 (Default, Union Budget 2025): ₹12L Sec 87A rebate threshold, revised slabs, marginal relief.
+    - AY 2025-26 (Legacy): ₹7L Sec 87A rebate threshold.
+    """
+    # 0. CTC vs Gross Taxable Salary Reconciliation
+    ctc_breakdown = None
+    if is_ctc:
+        ctc_amount = gross_income
+        basic = basic_salary if basic_salary > 0 else (ctc_amount * 0.40)
+        emp_pf = employer_pf if employer_pf > 0 else (basic * 0.12)
+        gratuity = basic * 0.0481
+        group_insurance = 10000.0 if ctc_amount >= 500000 else 0.0
+        
+        gross_salary = max(0.0, ctc_amount - emp_pf - gratuity - group_insurance)
+        ctc_breakdown = {
+            "total_ctc": round(ctc_amount, 2),
+            "employer_epf_contribution (exempt)": round(emp_pf, 2),
+            "gratuity_accrual (statutory reserve)": round(gratuity, 2),
+            "group_health_insurance_by_employer": round(group_insurance, 2),
+            "gross_taxable_salary": round(gross_salary, 2),
+            "distinction_note": "CTC represents total company cost. Gross Taxable Salary excludes employer EPF, gratuity accrual, and group insurance."
+        }
+    else:
+        gross_salary = gross_income
+        basic = basic_salary if basic_salary > 0 else (gross_salary * 0.50)
 
-    # Section 87A rebate up to ₹7,00,000 taxable income
-    if taxable_new <= 700000:
-        tax_new = 0.0
-
-    cess_new = tax_new * 0.04
-    total_tax_new = tax_new + cess_new
+    # 1. New Tax Regime
+    std_ded_new = 75000.0
+    taxable_new = max(0.0, gross_salary - std_ded_new - employer_nps_80ccd2)
+    new_regime_res = compute_new_regime_tax(taxable_new, ay=ay)
 
     # 2. Old Tax Regime
     std_ded_old = 50000.0
     hra_exemption = 0.0
-    if hra_received > 0 and rent_paid > 0 and basic_salary > 0:
-        excess_rent = max(0.0, rent_paid - (0.10 * basic_salary))
-        salary_pct = (0.50 if is_metro else 0.40) * basic_salary
+    if hra_received > 0 and rent_paid > 0 and basic > 0:
+        excess_rent = max(0.0, rent_paid - (0.10 * basic))
+        salary_pct = (0.50 if is_metro else 0.40) * basic
         hra_exemption = min(hra_received, excess_rent, salary_pct)
 
     c_80c = min(150000.0, sec_80c)
@@ -357,51 +481,79 @@ def calculate_india_tax(gross_income: float, basic_salary: float = 0.0, hra_rece
     c_80d = min(75000.0, sec_80d)
     c_24b = min(200000.0, sec_24b)
 
-    total_deductions_old = std_ded_old + hra_exemption + c_80c + c_80ccd + c_80d + c_24b
-    taxable_old = max(0.0, gross_income - total_deductions_old)
+    total_deductions_old = std_ded_old + hra_exemption + c_80c + c_80ccd + c_80d + c_24b + employer_nps_80ccd2
+    taxable_old = max(0.0, gross_salary - total_deductions_old)
 
-    # Slabs: 0-2.5L (0%), 2.5L-5L (5%), 5L-10L (20%), >10L (30%)
+    # Old Regime Slabs: 0-2.5L (0%), 2.5L-5L (5%), 5L-10L (20%), >10L (30%)
     tax_old = 0.0
-    if taxable_old > 1000000:
-        tax_old += (taxable_old - 1000000) * 0.30 + 500000 * 0.20 + 250000 * 0.05
-    elif taxable_old > 500000:
-        tax_old += (taxable_old - 500000) * 0.20 + 250000 * 0.05
-    elif taxable_old > 250000:
-        tax_old += (taxable_old - 250000) * 0.05
+    rem_old = taxable_old
+    if rem_old > 1000000:
+        tax_old += (rem_old - 1000000) * 0.30
+        rem_old = 1000000
+    if rem_old > 500000:
+        tax_old += (rem_old - 500000) * 0.20
+        rem_old = 500000
+    if rem_old > 250000:
+        tax_old += (rem_old - 250000) * 0.05
 
+    rebate_87a_old = 0.0
     if taxable_old <= 500000:
+        rebate_87a_old = tax_old
         tax_old = 0.0
 
     cess_old = tax_old * 0.04
     total_tax_old = tax_old + cess_old
 
+    total_tax_new = new_regime_res["total_tax"]
     tax_diff = total_tax_old - total_tax_new
     recommendation = "New Regime" if total_tax_new <= total_tax_old else "Old Regime"
     savings = abs(tax_diff)
 
     return {
-        "gross_income": gross_income,
+        "assessment_year": ay,
+        "income_inputs": {
+            "provided_amount": gross_income,
+            "input_type": "Cost to Company (CTC)" if is_ctc else "Gross Taxable Salary",
+            "gross_taxable_salary": round(gross_salary, 2)
+        },
+        "ctc_reconciliation": ctc_breakdown,
         "new_regime": {
             "standard_deduction": std_ded_new,
+            "employer_nps_80ccd2": round(employer_nps_80ccd2, 2),
             "taxable_income": round(taxable_new, 2),
-            "base_tax": round(tax_new, 2),
-            "cess_4_percent": round(cess_new, 2),
+            "slab_tax_before_relief": new_regime_res["slab_tax_before_relief"],
+            "sec_87a_rebate": new_regime_res["sec_87a_rebate"],
+            "marginal_relief_87a": new_regime_res["marginal_relief_87a"],
+            "tax_payable_before_cess": new_regime_res["tax_payable_before_cess"],
+            "cess_4_percent": new_regime_res["cess_4_percent"],
             "total_tax": round(total_tax_new, 2),
+            "effective_tax_rate_pct": new_regime_res["effective_tax_rate_pct"],
+            "notes": new_regime_res["rebate_threshold"]
         },
         "old_regime": {
-            "total_deductions": round(total_deductions_old, 2),
+            "standard_deduction": std_ded_old,
             "hra_exemption": round(hra_exemption, 2),
             "sec_80c": round(c_80c, 2),
             "sec_80ccd_1b": round(c_80ccd, 2),
             "sec_80d": round(c_80d, 2),
             "sec_24b_home_loan": round(c_24b, 2),
+            "employer_nps_80ccd2": round(employer_nps_80ccd2, 2),
+            "total_deductions": round(total_deductions_old, 2),
             "taxable_income": round(taxable_old, 2),
-            "base_tax": round(tax_old, 2),
+            "base_tax_before_rebate": round(tax_old + rebate_87a_old, 2),
+            "sec_87a_rebate": round(rebate_87a_old, 2),
             "cess_4_percent": round(cess_old, 2),
             "total_tax": round(total_tax_old, 2),
+            "effective_tax_rate_pct": round((total_tax_old / taxable_old * 100) if taxable_old > 0 else 0.0, 2)
         },
-        "recommended_regime": recommendation,
-        "annual_tax_saving": round(savings, 2)
+        "comparison_summary": {
+            "recommended_regime": recommendation,
+            "annual_tax_saving": round(savings, 2),
+            "taxable_income_distinction_clarification": (
+                "CRITICAL: CTC != Gross Salary != Taxable Income. "
+                "The Section 87A rebate applies on Net Taxable Income (after deductions), not CTC."
+            )
+        }
     }
 
 
@@ -564,6 +716,7 @@ def calculate_india_asset_returns(tax_bracket: str = "30", inflation: float = 0.
     """Compares post-tax nominal and real returns across core Indian asset classes."""
     slab_rates = {
         "30": 0.312,
+        "25": 0.260,
         "20": 0.208,
         "15": 0.156,
         "10": 0.104,
@@ -1363,7 +1516,7 @@ def main():
 
     # India Tax
     p_ind_tax = subparsers.add_parser("india-tax", help="Compare Old vs New Tax Regime for India (₹)")
-    p_ind_tax.add_argument("--gross", type=float, required=True, help="Gross annual CTC / income (₹)")
+    p_ind_tax.add_argument("--gross", type=float, required=True, help="Gross annual salary or CTC (₹)")
     p_ind_tax.add_argument("--basic", type=float, default=0.0, help="Basic annual salary for HRA (₹)")
     p_ind_tax.add_argument("--hra", type=float, default=0.0, help="Actual HRA received (₹)")
     p_ind_tax.add_argument("--rent", type=float, default=0.0, help="Actual annual rent paid (₹)")
@@ -1372,6 +1525,10 @@ def main():
     p_ind_tax.add_argument("--sec-80ccd", type=float, default=0.0, help="NPS Section 80CCD(1B) (₹)")
     p_ind_tax.add_argument("--sec-80d", type=float, default=0.0, help="Health insurance Section 80D (₹)")
     p_ind_tax.add_argument("--sec-24b", type=float, default=0.0, help="Home loan interest Section 24(b) (₹)")
+    p_ind_tax.add_argument("--ay", type=str, default="2026-27", choices=["2026-27", "2025-26"], help="Assessment Year (default: 2026-27 / FY 2025-26)")
+    p_ind_tax.add_argument("--is-ctc", action="store_true", help="Set if --gross represents Cost to Company (CTC) rather than Gross Taxable Salary")
+    p_ind_tax.add_argument("--employer-pf", type=float, default=0.0, help="Employer EPF contribution in CTC (₹)")
+    p_ind_tax.add_argument("--employer-nps", type=float, default=0.0, help="Employer NPS Section 80CCD(2) contribution (₹)")
 
     # India FIRE
     p_ind_fire = subparsers.add_parser("india-fire", help="Calculate India FIRE target & SIP gap (₹)")
@@ -1404,7 +1561,7 @@ def main():
 
     # India Asset Compare
     p_asset = subparsers.add_parser("asset-compare", help="Compare post-tax real returns across Indian asset classes")
-    p_asset.add_argument("--tax-bracket", type=str, default="30", choices=["30", "20", "15", "10", "5", "0"], help="Marginal tax slab (percent)")
+    p_asset.add_argument("--tax-bracket", type=str, default="30", choices=["30", "25", "20", "15", "10", "5", "0"], help="Marginal tax slab (percent)")
     p_asset.add_argument("--inflation", type=float, default=0.065, help="Assumed inflation (default 0.065)")
 
     # Real Estate Buy vs Rent Evaluator
@@ -1469,7 +1626,9 @@ def main():
         res = calculate_survivor_shock(args.spend, args.sp1, args.sp2, args.db)
     elif args.command == "india-tax":
         res = calculate_india_tax(args.gross, args.basic, args.hra, args.rent, args.metro,
-                                  args.sec_80c, args.sec_80ccd, args.sec_80d, args.sec_24b)
+                                  args.sec_80c, args.sec_80ccd, args.sec_80d, args.sec_24b,
+                                  ay=args.ay, is_ctc=args.is_ctc, employer_pf=args.employer_pf,
+                                  employer_nps_80ccd2=args.employer_nps)
     elif args.command == "india-fire":
         res = calculate_india_fire(args.age, args.retire_age, args.monthly_spend, args.portfolio,
                                    args.inflation, args.swr)

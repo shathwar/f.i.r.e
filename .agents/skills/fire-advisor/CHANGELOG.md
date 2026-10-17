@@ -1,5 +1,24 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.6.0] - 2026-10-17
+
+### Updated Indian Statutory Tax Model (AY 2026-27 & CTC Invariant):
+- **Official AY 2026-27 Guidance (Union Budget 2025 Reforms)**:
+  - Integrated versioned tax engine defaulting to **AY 2026-27** (with legacy fallback to **AY 2025-26**).
+  - **₹12,00,000 Taxable Income Section 87A Rebate Threshold**:
+    - Salaried employees enjoy zero tax up to **₹12.75 Lakhs Gross Salary** after the ₹75,000 Standard Deduction.
+    - Up to ₹60,000 in base slab tax (₹20,000 @ 5% + ₹40,000 @ 10%) is fully rebated under Section 87A.
+  - **Section 87A Statutory Marginal Relief**:
+    - Ensures tax payable before cess cannot exceed the income exceeding ₹12,00,000 for taxable income between ₹12,00,001 and ₹12,70,588, eliminating the cliff tax.
+  - **Revised Slabs**: 0–4L (Nil), 4L–8L (5%), 8L–12L (10%), 12L–16L (15%), 16L–20L (20%), 20L–24L (25%), >24L (30%).
+- **CTC vs. Gross Salary vs. Taxable Income Invariant**:
+  - Strictly distinguishes **Cost to Company (CTC)**, **Gross Taxable Salary**, and **Net Taxable Income**.
+  - Reconciles non-taxable employer EPF (12% of basic), statutory gratuity accrual (~4.81% of basic), and group health insurance from CTC.
+  - Section 87A rebate applies strictly to Net Taxable Income, NOT CTC!
+- **Asset Source Tracking & Audit Ledger**:
+  - Captures custodian, broker, folio, ISIN, UAN, PRAN, title deed, and cold storage hardware wallet identifiers with portal URLs across every asset and liability.
+  - Auto-compiles an `asset_tracking_source_ledger` during `profile-eval`.
+
 ## [1.5.0] - 2026-10-17
 
 ### Added Local Client Profile Storage & Private Asset Management:

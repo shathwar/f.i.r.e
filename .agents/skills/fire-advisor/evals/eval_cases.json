@@ -111,14 +111,14 @@
     },
     {
       "id": "eval_10_india_tax_regime_optimization",
-      "capability": "India Tax Optimization",
+      "capability": "India Tax Optimization (Versioned Regimes)",
       "jurisdiction": "India",
-      "prompt": "My annual CTC is ₹22 Lakhs. I pay ₹35,000/month rent in Mumbai (Metro), invest ₹1.5L in 80C, ₹50k in NPS 80CCD(1B), and ₹25k in 80D health insurance. Should I choose the Old or New Regime?",
+      "prompt": "My annual Gross Salary is ₹22 Lakhs. I pay ₹35,000/month rent in Mumbai (Metro) with Basic Salary of ₹11 Lakhs and HRA of ₹4.2 Lakhs, invest ₹1.5L in 80C, ₹50k in NPS 80CCD(1B), and ₹25k in 80D health insurance. Should I choose the Old or New Regime under the latest AY 2026-27 rules vs legacy AY 2025-26?",
       "expected_criteria": [
-        "Computes HRA exemption under the minimum of 3 conditions formula",
-        "Tallies eligible deductions under Old Regime (HRA + 80C + 80CCD + 80D + ₹50k standard deduction)",
-        "Compares against New Regime with ₹75,000 standard deduction and progressive slabs",
-        "Recommends Old Regime with concrete annual ₹ tax savings calculated"
+        "Computes HRA exemption under the statutory 3-condition minimum formula (₹3.10 Lakhs)",
+        "Tallies eligible deductions under Old Regime (HRA + 80C + 80CCD + 80D + ₹50k standard deduction = ₹5.85 Lakhs)",
+        "Evaluates under default AY 2026-27 rules: New Regime tax is ₹2,40,500 vs Old Regime ₹3,08,880, showing New Regime saves ₹68,380 due to wide slabs and lower rates",
+        "Demonstrates versioning awareness: notes that under legacy AY 2025-26 slabs the Old Regime had saved ₹31,720, but the AY 2026-27 reforms flipped the advantage decisively to the New Regime"
       ]
     },
     {
@@ -216,6 +216,18 @@
         "Generates an Asset Tracking & Source Ledger during profile evaluation aggregating all assets and liabilities",
         "Validates source tracking across all categories (Cash/FDs, Equities/MFs, Pensions/EPF/SIPP, Gold/SGB, Real Estate, Crypto, Home Loans, and Term/Health Insurance)",
         "Maintains complete local data privacy while providing an immediate audit trail for the client"
+      ]
+    },
+    {
+      "id": "eval_19_india_ay26_27_rebate_and_ctc_distinction",
+      "capability": "India AY 2026-27 Rebate, Marginal Relief & CTC Reconciliation",
+      "jurisdiction": "India",
+      "prompt": "My annual CTC is ₹14 Lakhs. Does the new Indian tax regime make this tax-free? What is the difference between my CTC, gross salary, and taxable income under AY 2026-27 rules, and what happens if my taxable income slightly exceeds ₹12 Lakhs?",
+      "expected_criteria": [
+        "Distinguishes CTC from Gross Taxable Salary and Net Taxable Income: explains that CTC includes employer EPF (12% of basic) and gratuity accrual (~4.81% of basic), which are not part of annual gross taxable pay",
+        "Explains that the official AY 2026-27 Section 87A rebate applies on Net Taxable Income up to ₹12,00,000 (after the ₹75,000 standard deduction, allowing up to ₹12.75L Gross Salary and ~₹13.5L-₹14L CTC with zero tax)",
+        "Calculates the exact Section 87A marginal relief formula for taxable income slightly exceeding ₹12 Lakhs, capping tax payable before cess to the income exceeding ₹12L",
+        "Demonstrates the versioned tax model supporting AY 2026-27 (default) and legacy AY 2025-26"
       ]
     }
   ]
