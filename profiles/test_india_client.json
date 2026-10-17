@@ -1,0 +1,97 @@
+{
+  "profile_name": "New_India_Client",
+  "jurisdiction": "India",
+  "client_info": {
+    "age": 32,
+    "target_retirement_age": 47,
+    "monthly_expenses": 75000.0,
+    "annual_income": 2400000.0,
+    "tax_bracket": "30",
+    "tax_regime": "New"
+  },
+  "assets": {
+    "cash_and_emergency": [
+      {
+        "name": "Bank Fixed Deposit",
+        "amount": 500000.0,
+        "rate": 0.0725
+      },
+      {
+        "name": "Arbitrage Mutual Fund",
+        "amount": 300000.0,
+        "rate": 0.07
+      }
+    ],
+    "equities": [
+      {
+        "name": "Nifty 50 Index Fund",
+        "amount": 2000000.0,
+        "expected_cagr": 0.12
+      },
+      {
+        "name": "Flexi Cap Fund",
+        "amount": 1000000.0,
+        "expected_cagr": 0.12
+      }
+    ],
+    "pensions_and_retirement": [
+      {
+        "name": "EPF Balance",
+        "amount": 1000000.0,
+        "rate": 0.0825
+      },
+      {
+        "name": "PPF",
+        "amount": 400000.0,
+        "rate": 0.071
+      },
+      {
+        "name": "NPS Tier 1",
+        "amount": 250000.0
+      }
+    ],
+    "precious_metals": [
+      {
+        "name": "Sovereign Gold Bonds (SGB)",
+        "amount": 350000.0
+      },
+      {
+        "name": "Silver ETF",
+        "amount": 75000.0
+      }
+    ],
+    "real_estate": [
+      {
+        "name": "Self-occupied Apartment",
+        "amount": 12000000.0,
+        "is_primary": true
+      },
+      {
+        "name": "Listed REIT Units",
+        "amount": 250000.0,
+        "distribution_yield": 0.072
+      }
+    ],
+    "digital_assets": [
+      {
+        "name": "Bitcoin (Cold Storage)",
+        "amount": 200000.0,
+        "cost_basis": 120000.0
+      }
+    ]
+  },
+  "liabilities": [
+    {
+      "name": "Home Loan",
+      "principal_outstanding": 4000000.0,
+      "interest_rate": 0.0875,
+      "remaining_tenure_years": 18,
+      "monthly_emi": 36500.0
+    }
+  ],
+  "protection": {
+    "term_insurance_cover": 25000000.0,
+    "has_health_insurance": true,
+    "has_revolving_credit_card_debt": false
+  }
+}

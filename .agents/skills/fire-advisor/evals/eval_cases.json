@@ -193,6 +193,18 @@
         "Computes 24% higher-rate CGT = £1,920 tax owed",
         "Advises capping crypto at 1%-5% satellite allocation and harvesting profits into tax-sheltered ISAs"
       ]
+    },
+    {
+      "id": "eval_17_local_client_profile_storage_and_eval",
+      "capability": "Local Profile Storage & Private Portfolio Evaluation",
+      "jurisdiction": "Multi-Jurisdiction",
+      "prompt": "I want to store my complete asset profile locally on my machine in a private folder ~/Documents/MyFinances/anita.json and evaluate my FIRE readiness. How does the system handle local profile storage and evaluation?",
+      "expected_criteria": [
+        "Confirms 100% private local storage in the user's chosen directory with zero cloud leakage",
+        "Generates or references the unified asset profile schema covering Cash, Equities, Pensions, Precious Metals, Real Estate, Crypto, Liabilities, and Protection",
+        "Demonstrates profile-template, profile-list, and profile-eval CLI commands with custom file paths",
+        "Executes a holistic balance sheet diagnostic (liquid financial wealth, net worth, allocation %, FIRE target gap, and Money Health Score)"
+      ]
     }
   ]
 }

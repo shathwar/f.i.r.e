@@ -1,5 +1,26 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.5.0] - 2026-10-17
+
+### Added Local Client Profile Storage & Private Asset Management:
+- **Strict Privacy & Zero Cloud Leakage Invariant**:
+  - All client asset balances, liabilities, income, and personal goals are stored exclusively on the user's local filesystem in any location they specify.
+- **Unified Multi-Jurisdiction JSON Asset Schema**:
+  - Encapsulates Cash & Emergency (FDs, Arbitrage, Savings), Equities (Index funds, Flexicap, ISAs, GIAs), Pensions (SIPP, DC, EPF, PPF, NPS), Precious Metals (Gold SGB, Silver), Real Estate (Primary vs. REITs/Investment), Digital Assets (Bitcoin, ETH), Liabilities (Mortgages, Home loans), and Protection (Term life, Health insurance).
+- **Automated Profile Evaluation Engine (`profile-eval`)**:
+  - Tallies liquid financial portfolio vs. illiquid primary residence.
+  - Automatically computes asset allocation percentages across all 7 asset classes.
+  - Projects portfolio compounding vs. inflation-adjusted FIRE Target and computes required monthly savings/SIP gap.
+  - Computes comprehensive 0–100 Money Health Score (MHS) with Protection-First rule validation.
+- **New CLI Subcommands in `fire_calculator.py`**:
+  - `profile-template`: Generates a blank UK or Indian profile template in the user's chosen local directory/file path.
+  - `profile-list`: Lists all profiles in a user-specified directory.
+  - `profile-show`: Inspects a local profile JSON.
+  - `profile-eval`: Directly evaluates a stored profile for FIRE readiness and financial health.
+- **Documentation & References**:
+  - Added `references/local_profile_storage.md`.
+  - Added test case `eval_17` to `eval_cases.json`.
+
 ## [1.4.0] - 2026-10-17
 
 ### Added Digital Assets & Cryptocurrencies (Bitcoin, Ethereum):

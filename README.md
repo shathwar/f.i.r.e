@@ -29,6 +29,11 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
   * 1%–5% asymmetric satellite sizing rule; never part of the core retirement floor or emergency fund.
   * UK: 18%/24% CGT above £3,000 exemption, HMRC pooling, lack of ISA/SIPP wrapping.
   * India: Flat 30% (+4% cess = 31.2%) tax under Section 115BBH, strict zero loss set-off, 1% TDS under Section 194S.
+* **Local Client Profile Storage & Asset Management**:
+  * 100% private, local storage on the user's filesystem in any directory they specify (`--dir`, `--file`, `FIRE_PROFILES_DIR`).
+  * Automated balance sheet aggregator: liquid portfolio, illiquid primary residence, debt, net worth.
+  * Automated asset allocation across all 7 asset classes (Cash, Equity, Pension, Gold, Silver, Crypto, Real Estate).
+  * One-command FIRE readiness & Money Health Score evaluation (`profile-eval`).
 
 ---
 
@@ -37,7 +42,7 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 ```text
 .agents/skills/fire-advisor/
 ├── SKILL.md                 # Primary advisory prompt, CFP persona, contracts & capability runbooks
-├── VERSION                  # 1.4.0
+├── VERSION                  # 1.5.0
 ├── CHANGELOG.md             # Semantic version changelog
 ├── references/
 │   ├── uk_tax_wrappers.md   # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
@@ -47,11 +52,12 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 │   ├── india_investments_and_tax.md # MFs, FDs, Gold, Silver, Real Estate, REITs, Old vs New, HRA
 │   ├── crypto_and_digital_assets.md # Digital assets in F.I.R.E., UK HMRC CGT, India Sec 115BBH & 194S
 │   ├── market_data_sources.md       # Primary statutory benchmarks, data lineage, spot vs CAGR
+│   ├── local_profile_storage.md     # Private local JSON profile schema & storage runbook
 │   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
 ├── scripts/
 │   └── fire_calculator.py   # Multi-jurisdiction CLI calculation engine (UK & India)
 └── evals/
-    └── eval_cases.json      # Comprehensive evaluation suite (16 test scenarios across UK & India)
+    └── eval_cases.json      # Comprehensive evaluation suite (17 test scenarios across UK & India)
 ```
 
 ---
@@ -108,4 +114,19 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py real-estate-eval 
 # 12. India VDA Crypto Tax Trap (₹10L profit on BTC, ₹4L loss on ETH, 1% TDS)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py crypto-tax \
   --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000
+
+
+# --- LOCAL CLIENT PROFILE STORAGE & ASSET MANAGEMENT ---
+
+# 13. Generate blank profile template in your chosen directory
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-template \
+  --jurisdiction india --output /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+
+# 14. List profiles in your chosen directory
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-list \
+  --dir /Users/Sumanth/Documents/MyFIREProfiles/
+
+# 15. Run full F.I.R.E. evaluation & Money Health Score on a stored profile
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-eval \
+  --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
 ```

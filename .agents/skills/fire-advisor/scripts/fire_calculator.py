@@ -21,9 +21,12 @@ Supports:
 """
 
 import argparse
+import json
 import math
+import os
+from pathlib import Path
 import sys
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, List, Optional
 
 
 # ==============================================================================
@@ -796,6 +799,325 @@ def calculate_crypto_tax(jurisdiction: str, gain: float, loss: float = 0.0,
 
 
 # ==============================================================================
+# LOCAL PROFILE STORAGE & ASSET MANAGEMENT
+# ==============================================================================
+
+def get_default_profiles_dir() -> Path:
+    """Returns the default directory for local profiles if none specified."""
+    env_dir = os.environ.get("FIRE_PROFILES_DIR")
+    if env_dir:
+        return Path(env_dir)
+    config_file = Path(".fire_advisor_config.json")
+    if config_file.exists():
+        try:
+            with open(config_file, "r") as f:
+                cfg = json.load(f)
+                if "profiles_directory" in cfg:
+                    return Path(cfg["profiles_directory"])
+        except Exception:
+            pass
+    return Path("./profiles")
+
+
+def generate_profile_template(jurisdiction: str = "india", output_path: Optional[str] = None) -> Dict[str, Any]:
+    """Generates a blank client profile template for local storage."""
+    jurisdiction = jurisdiction.lower().strip()
+    if jurisdiction in ["uk", "gb", "britain"]:
+        template = {
+            "profile_name": "New_UK_Client",
+            "jurisdiction": "UK",
+            "client_info": {
+                "age": 35,
+                "target_retirement_age": 55,
+                "annual_spend": 40000.0,
+                "gross_annual_income": 85000.0,
+                "tax_bracket": "higher"
+            },
+            "assets": {
+                "cash_and_emergency": [
+                    {"name": "Emergency Cash Account", "amount": 20000.0}
+                ],
+                "isas": [
+                    {"name": "Stocks and Shares ISA", "amount": 100000.0}
+                ],
+                "pensions": [
+                    {"name": "SIPP", "amount": 150000.0},
+                    {"name": "Workplace DC Pension", "amount": 75000.0}
+                ],
+                "gias": [
+                    {"name": "General Investment Account", "amount": 25000.0}
+                ],
+                "digital_assets": [
+                    {"name": "Bitcoin", "amount": 5000.0}
+                ],
+                "real_estate": [
+                    {"name": "Primary Residence", "amount": 450000.0, "is_primary": True}
+                ]
+            },
+            "liabilities": [
+                {
+                    "name": "Residential Mortgage",
+                    "principal_outstanding": 220000.0,
+                    "interest_rate": 0.045,
+                    "monthly_emi": 1250.0
+                }
+            ],
+            "protection": {
+                "term_insurance_cover": 1000000.0,
+                "has_health_insurance": True,
+                "has_revolving_credit_card_debt": False
+            }
+        }
+    else:
+        template = {
+            "profile_name": "New_India_Client",
+            "jurisdiction": "India",
+            "client_info": {
+                "age": 32,
+                "target_retirement_age": 47,
+                "monthly_expenses": 75000.0,
+                "annual_income": 2400000.0,
+                "tax_bracket": "30",
+                "tax_regime": "New"
+            },
+            "assets": {
+                "cash_and_emergency": [
+                    {"name": "Bank Fixed Deposit", "amount": 500000.0, "rate": 0.0725},
+                    {"name": "Arbitrage Mutual Fund", "amount": 300000.0, "rate": 0.07}
+                ],
+                "equities": [
+                    {"name": "Nifty 50 Index Fund", "amount": 2000000.0, "expected_cagr": 0.12},
+                    {"name": "Flexi Cap Fund", "amount": 1000000.0, "expected_cagr": 0.12}
+                ],
+                "pensions_and_retirement": [
+                    {"name": "EPF Balance", "amount": 1000000.0, "rate": 0.0825},
+                    {"name": "PPF", "amount": 400000.0, "rate": 0.071},
+                    {"name": "NPS Tier 1", "amount": 250000.0}
+                ],
+                "precious_metals": [
+                    {"name": "Sovereign Gold Bonds (SGB)", "amount": 350000.0},
+                    {"name": "Silver ETF", "amount": 75000.0}
+                ],
+                "real_estate": [
+                    {"name": "Self-occupied Apartment", "amount": 12000000.0, "is_primary": True},
+                    {"name": "Listed REIT Units", "amount": 250000.0, "distribution_yield": 0.072}
+                ],
+                "digital_assets": [
+                    {"name": "Bitcoin (Cold Storage)", "amount": 200000.0, "cost_basis": 120000.0}
+                ]
+            },
+            "liabilities": [
+                {
+                    "name": "Home Loan",
+                    "principal_outstanding": 4000000.0,
+                    "interest_rate": 0.0875,
+                    "remaining_tenure_years": 18,
+                    "monthly_emi": 36500.0
+                }
+            ],
+            "protection": {
+                "term_insurance_cover": 25000000.0,
+                "has_health_insurance": True,
+                "has_revolving_credit_card_debt": False
+            }
+        }
+
+    if output_path:
+        out = Path(output_path)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump(template, f, indent=2)
+        return {
+            "status": "success",
+            "message": f"Profile template saved to {out.resolve()}",
+            "file_path": str(out.resolve()),
+            "template": template
+        }
+    return template
+
+
+def load_profile(file_path: str) -> Dict[str, Any]:
+    """Loads a client profile from a specified local file path."""
+    p = Path(file_path)
+    if not p.exists():
+        return {"error": f"Profile file not found at {file_path}"}
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            data["_file_path"] = str(p.resolve())
+            return data
+    except Exception as e:
+        return {"error": f"Failed to parse profile JSON: {str(e)}"}
+
+
+def list_profiles(directory_path: Optional[str] = None) -> Dict[str, Any]:
+    """Lists all local client profiles in the user-specified directory."""
+    target_dir = Path(directory_path) if directory_path else get_default_profiles_dir()
+    if not target_dir.exists():
+        return {
+            "directory": str(target_dir.resolve()),
+            "profiles_found": 0,
+            "profiles": [],
+            "note": "Directory does not exist. Use profile-template to create one."
+        }
+
+    profiles = []
+    for f in target_dir.glob("*.json"):
+        try:
+            with open(f, "r", encoding="utf-8") as pf:
+                d = json.load(pf)
+                profiles.append({
+                    "file_name": f.name,
+                    "full_path": str(f.resolve()),
+                    "profile_name": d.get("profile_name", f.stem),
+                    "jurisdiction": d.get("jurisdiction", "Unknown"),
+                    "age": d.get("client_info", {}).get("age", "N/A"),
+                    "last_modified": os.path.getmtime(f)
+                })
+        except Exception:
+            continue
+
+    return {
+        "directory": str(target_dir.resolve()),
+        "profiles_found": len(profiles),
+        "profiles": profiles
+    }
+
+
+def evaluate_profile(file_path: str, inflation: float = 0.065, swr: float = 0.033) -> Dict[str, Any]:
+    """Evaluates a stored client profile across FIRE readiness, allocation, and Money Health."""
+    profile = load_profile(file_path)
+    if "error" in profile:
+        return profile
+
+    jurisdiction = profile.get("jurisdiction", "India").lower()
+    client_info = profile.get("client_info", {})
+    assets = profile.get("assets", {})
+    liabilities = profile.get("liabilities", [])
+    protection = profile.get("protection", {})
+
+    def sum_category(cat_name):
+        items = assets.get(cat_name, [])
+        return sum(item.get("amount", item.get("market_value", 0.0)) for item in items)
+
+    cash_total = sum_category("cash_and_emergency")
+    equities_total = sum_category("equities")
+    isas_total = sum_category("isas")
+    pensions_total = sum_category("pensions") + sum_category("pensions_and_retirement")
+    gias_total = sum_category("gias")
+    precious_metals_total = sum_category("precious_metals")
+    digital_assets_total = sum_category("digital_assets")
+
+    re_items = assets.get("real_estate", [])
+    primary_residence_val = 0.0
+    investment_re_val = 0.0
+    for re_item in re_items:
+        val = re_item.get("amount", re_item.get("market_value", 0.0))
+        if re_item.get("is_primary", False):
+            primary_residence_val += val
+        else:
+            investment_re_val += val
+
+    financial_portfolio = (cash_total + equities_total + isas_total + pensions_total +
+                           gias_total + precious_metals_total + digital_assets_total + investment_re_val)
+
+    total_gross_assets = financial_portfolio + primary_residence_val
+    total_debt = sum(l.get("principal_outstanding", 0.0) for l in liabilities)
+    total_monthly_emi = sum(l.get("monthly_emi", l.get("monthly_payment", 0.0)) for l in liabilities)
+
+    total_net_worth = total_gross_assets - total_debt
+
+    allocation_pct = {}
+    if financial_portfolio > 0:
+        allocation_pct = {
+            "cash_pct": round((cash_total / financial_portfolio) * 100.0, 1),
+            "equities_pct": round(((equities_total + isas_total + gias_total) / financial_portfolio) * 100.0, 1),
+            "pensions_pct": round((pensions_total / financial_portfolio) * 100.0, 1),
+            "precious_metals_pct": round((precious_metals_total / financial_portfolio) * 100.0, 1),
+            "crypto_pct": round((digital_assets_total / financial_portfolio) * 100.0, 1),
+            "investment_real_estate_pct": round((investment_re_val / financial_portfolio) * 100.0, 1)
+        }
+
+    current_age = client_info.get("age", 35)
+    target_retire_age = client_info.get("target_retirement_age", 50)
+    years_to_retire = max(0, target_retire_age - current_age)
+
+    if "monthly_expenses" in client_info:
+        current_monthly_spend = client_info["monthly_expenses"]
+        current_annual_spend = current_monthly_spend * 12.0
+    else:
+        current_annual_spend = client_info.get("annual_spend", 40000.0)
+        current_monthly_spend = current_annual_spend / 12.0
+
+    calibrated_inflation = 0.025 if jurisdiction in ["uk", "gb"] else inflation
+    calibrated_swr = 0.035 if jurisdiction in ["uk", "gb"] else swr
+
+    future_annual_spend = current_annual_spend * ((1.0 + calibrated_inflation) ** years_to_retire)
+    fire_target = future_annual_spend / calibrated_swr
+
+    growth_rate = 0.07 if jurisdiction in ["uk", "gb"] else 0.10
+    portfolio_at_retirement = financial_portfolio * ((1.0 + growth_rate) ** years_to_retire)
+    corpus_gap = max(0.0, fire_target - portfolio_at_retirement)
+
+    monthly_r = (1.0 + growth_rate) ** (1.0 / 12.0) - 1.0
+    n_months = years_to_retire * 12
+    if corpus_gap > 0 and n_months > 0:
+        required_monthly_sip = (corpus_gap * monthly_r) / ((1.0 + monthly_r) * ((1.0 + monthly_r)**n_months - 1.0))
+    else:
+        required_monthly_sip = 0.0
+
+    annual_income = client_info.get("annual_income", client_info.get("gross_annual_income", current_annual_spend * 2.0))
+    monthly_income = annual_income / 12.0
+    term_cover = protection.get("term_insurance_cover", 0.0)
+    has_health = protection.get("has_health_insurance", True)
+    has_cc_debt = protection.get("has_revolving_credit_card_debt", False)
+    equity_pct_val = allocation_pct.get("equities_pct", 60.0)
+
+    mhs_result = calculate_money_health_score(
+        monthly_income=monthly_income,
+        monthly_expenses=current_monthly_spend,
+        monthly_emi=total_monthly_emi,
+        liquid_fund=cash_total,
+        term_insurance_cover=term_cover,
+        has_health_insurance=has_health,
+        age=current_age,
+        equity_percent=equity_pct_val,
+        has_credit_card_debt=has_cc_debt
+    )
+
+    currency_sym = "£" if jurisdiction in ["uk", "gb"] else "₹"
+
+    return {
+        "profile_metadata": {
+            "profile_name": profile.get("profile_name", Path(file_path).stem),
+            "file_source": str(Path(file_path).resolve()),
+            "jurisdiction": jurisdiction.upper(),
+            "client_age": current_age,
+            "target_retirement_age": target_retire_age,
+            "years_to_fire": years_to_retire
+        },
+        "balance_sheet_summary": {
+            f"liquid_financial_portfolio ({currency_sym})": round(financial_portfolio, 2),
+            f"primary_residence_value (illiquid {currency_sym})": round(primary_residence_val, 2),
+            f"gross_total_assets ({currency_sym})": round(total_gross_assets, 2),
+            f"total_debt_liabilities ({currency_sym})": round(total_debt, 2),
+            f"total_net_worth ({currency_sym})": round(total_net_worth, 2)
+        },
+        "asset_allocation_breakdown": allocation_pct,
+        "fire_target_and_gap_analysis": {
+            f"current_annual_spend ({currency_sym})": round(current_annual_spend, 2),
+            f"future_annual_spend_at_retirement ({currency_sym})": round(future_annual_spend, 2),
+            f"fire_target_corpus ({currency_sym})": round(fire_target, 2),
+            f"projected_portfolio_at_retirement ({currency_sym})": round(portfolio_at_retirement, 2),
+            f"corpus_gap ({currency_sym})": round(corpus_gap, 2),
+            f"required_monthly_savings ({currency_sym})": round(required_monthly_sip, 2),
+            "status": "FI on track!" if corpus_gap == 0 else f"Requires additional {currency_sym}{round(required_monthly_sip):,}/month savings"
+        },
+        "money_health_diagnostic": mhs_result
+    }
+
+
+# ==============================================================================
 # MAIN CLI DISPATCHER
 # ==============================================================================
 
@@ -925,6 +1247,22 @@ def main():
     p_crypto.add_argument("--transfer-value", type=float, default=0.0, help="Total transaction / sale value for TDS")
     p_crypto.add_argument("--bracket", type=str, default="higher", choices=["basic", "higher"], help="UK tax bracket")
 
+    # Profile Management Subparsers
+    p_pro_temp = subparsers.add_parser("profile-template", help="Generate a blank profile template in your chosen local path")
+    p_pro_temp.add_argument("--jurisdiction", type=str, default="india", choices=["india", "uk"], help="Tax jurisdiction template")
+    p_pro_temp.add_argument("--output", type=str, help="Local file path to save the template (e.g. /path/to/profile.json)")
+
+    p_pro_list = subparsers.add_parser("profile-list", help="List all local profiles in the user-specified directory")
+    p_pro_list.add_argument("--dir", type=str, help="Local directory containing profiles (default: ./profiles or FIRE_PROFILES_DIR)")
+
+    p_pro_show = subparsers.add_parser("profile-show", help="Load and view a local client profile JSON")
+    p_pro_show.add_argument("--file", type=str, required=True, help="Local file path to client profile JSON")
+
+    p_pro_eval = subparsers.add_parser("profile-eval", help="Evaluate a local client profile for FIRE readiness, allocation & MHS")
+    p_pro_eval.add_argument("--file", type=str, required=True, help="Local file path to client profile JSON")
+    p_pro_eval.add_argument("--inflation", type=float, default=0.065, help="Assumed inflation (default 0.065 for India)")
+    p_pro_eval.add_argument("--swr", type=float, default=0.033, help="Safe withdrawal rate (default 0.033 for India)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -971,6 +1309,14 @@ def main():
                                                 args.equity_cagr, args.prop_cagr)
     elif args.command == "crypto-tax":
         res = calculate_crypto_tax(args.jurisdiction, args.gain, args.loss, args.transfer_value, args.bracket)
+    elif args.command == "profile-template":
+        res = generate_profile_template(args.jurisdiction, args.output)
+    elif args.command == "profile-list":
+        res = list_profiles(args.dir)
+    elif args.command == "profile-show":
+        res = load_profile(args.file)
+    elif args.command == "profile-eval":
+        res = evaluate_profile(args.file, args.inflation, args.swr)
 
     print(json.dumps(res, indent=2))
 

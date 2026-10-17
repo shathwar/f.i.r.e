@@ -142,3 +142,20 @@ All quantitative advisory models are backed by [`scripts/fire_calculator.py`](fi
 * `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000`
 * `python3 scripts/fire_calculator.py crypto-tax --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000`
 * `python3 scripts/fire_calculator.py crypto-tax --jurisdiction uk --gain 15000 --loss 4000 --bracket higher`
+* `python3 scripts/fire_calculator.py profile-template --jurisdiction india --output /path/to/profile.json`
+* `python3 scripts/fire_calculator.py profile-show --file /path/to/profile.json`
+* `python3 scripts/fire_calculator.py profile-list --dir /path/to/profiles_dir/`
+* `python3 scripts/fire_calculator.py profile-eval --file /path/to/profile.json`
+
+---
+
+## Part E: Local Client Profile Storage & Private Asset Management
+
+*(Refer to [`references/local_profile_storage.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/local_profile_storage.md))*
+* **Strict Local Storage Invariant**: Asset balances, liabilities, income, and personal details must be stored locally in a directory chosen by the user (`--dir`, `--file`, `.fire_advisor_config.json`, or `FIRE_PROFILES_DIR`). Zero cloud upload.
+* **Unified Asset Schema**: Encapsulates Cash & Emergency (FDs, Arbitrage), Equities (Index funds, Flexicap, ISAs, GIAs), Pensions (SIPP, DC, EPF, PPF, NPS), Precious Metals (Gold SGB, Silver), Real Estate (Self-occupied vs REITs), Digital Assets (Bitcoin, ETH), Liabilities (Home loans, Mortgages), and Protection (Term cover, Health insurance).
+* **Automatic Portfolio Diagnostics**: When `profile-eval` runs on a profile, it instantly computes:
+  1. Liquid financial wealth vs. illiquid primary residence.
+  2. Asset allocation breakdown across all 7 asset classes.
+  3. Inflation-adjusted FIRE Target and monthly savings/SIP gap.
+  4. 0–100 Money Health Score (MHS) with Protection-First rule verification.
