@@ -254,25 +254,25 @@ Each client profile captures full balance sheet details, income, expenses, prote
 
 ## 3. Profile Management CLI Commands
 
-Users manage their local profiles with deterministic subcommands in [`fire_calculator.py`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/scripts/fire_calculator.py):
+Users manage their local profiles with deterministic subcommands in [`scripts/fire_calculator.py`](../scripts/fire_calculator.py):
 
 ```bash
 # 1. Generate a blank template in your chosen directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-template \
   --jurisdiction india \
-  --output /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+  --output ./profiles/anita.json
 
 # 2. View/Inspect a profile stored in a custom local directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-show \
-  --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+  --file ./profiles/anita.json
 
 # 3. List all profiles in a custom local directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-list \
-  --dir /Users/Sumanth/Documents/MyFIREProfiles/
+  --dir ./profiles/
 
 # 4. Run full F.I.R.E. evaluation & diagnostic directly from a stored profile
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-eval \
-  --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+  --file ./profiles/anita.json
 ```
 
 ---

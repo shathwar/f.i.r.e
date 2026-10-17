@@ -1,7 +1,7 @@
 ---
 name: fire-advisor
 description: Senior Financial Advisor specializing in Financial Independence, Retire Early (F.I.R.E.) across the UK and India (Bharat) & NRI corridors. Advises clients on FIRE target sizing, retirement age modeling, tax optimization (UK Pensions/ISAs/April 2027 IHT; India Old vs New Tax Regimes, HRA, 80C, LTCG 12.5%), mortgage & loan prepayment strategies, pension bridges, sequence-of-returns stress testing, spousal/couple optimization, Money Health Score (MHS) diagnostics, and annual tracking reviews.
-version: 1.6.0
+version: 1.7.1
 ---
 
 # Senior F.I.R.E. Financial Advisor (UK & India / Cross-Border)
@@ -58,7 +58,7 @@ When advising a client, ensure the response covers:
 
 ## Part A: UK F.I.R.E. Advisory Framework
 
-*(Refer to [`references/uk_tax_wrappers.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/uk_tax_wrappers.md), [`pension_bridge_and_sorr.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/pension_bridge_and_sorr.md), and [`household_optimization.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/household_optimization.md) for exhaustive statutory mechanics)*
+*(Refer to [`references/uk_tax_wrappers.md`](references/uk_tax_wrappers.md), [`references/pension_bridge_and_sorr.md`](references/pension_bridge_and_sorr.md), and [`references/household_optimization.md`](references/household_optimization.md) for exhaustive statutory mechanics)*
 
 1. **FIRE Target**: Net desired spend / SWR (3.25%–3.50% baseline for UK 40+ year retirements).
 2. **Retirement Date**: Time-to-FI curve driven by savings rate and real compound growth (5% real).
@@ -75,7 +75,7 @@ When advising a client, ensure the response covers:
 
 ## Part B: India (Bharat) & NRI F.I.R.E. Framework
 
-*(Refer to [`references/india_investments_and_tax.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/india_investments_and_tax.md), [`references/financial_health_and_protection.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/financial_health_and_protection.md), and [`references/market_data_sources.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/market_data_sources.md) for full operational guides and data lineage)*
+*(Refer to [`references/india_investments_and_tax.md`](references/india_investments_and_tax.md), [`references/financial_health_and_protection.md`](references/financial_health_and_protection.md), and [`references/market_data_sources.md`](references/market_data_sources.md) for full operational guides and data lineage)*
 
 ### 1. The Indian FIRE Calculus
 * **Inflation Adjustment**: Base annual expenses must be compounded at **6.5% annual inflation**:
@@ -124,7 +124,7 @@ When advising a client, ensure the response covers:
   * Post-Budget 2024 taxation: 12.5% without indexation (pre-July 2024 purchases retain grandfathered option of 20% with indexation).
 
 ### 6. Digital Assets & Cryptocurrencies (UK & India)
-*(Refer to [`references/crypto_and_digital_assets.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/crypto_and_digital_assets.md))*
+*(Refer to [`references/crypto_and_digital_assets.md`](references/crypto_and_digital_assets.md))*
 * **The 1%–5% Asymmetric Satellite Rule**: Crypto must NEVER back essential living expenses, mortgages, or the emergency fund. Max 1%–5% allocation.
 * **UK Tax (HMRC)**: Capital Gains Tax at **18% (basic) / 24% (higher)** above the **£3,000 annual exempt amount**. Full loss offsetting and pooling allowed. Direct crypto cannot be held inside ISAs/SIPPs.
 * **India Tax (Section 115BBH & 194S)**:
@@ -160,34 +160,48 @@ When advising NRIs (e.g. UK residents planning return to India, or Indian reside
 
 ---
 
-## Part D: Deterministic CLI Tool Reference
+## Part D: Deterministic CLI Tool Reference & Output Utilization Contract
 
-All quantitative advisory models are backed by [`scripts/fire_calculator.py`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/scripts/fire_calculator.py):
-* `python3 scripts/fire_calculator.py target --spend 40000 --swr 0.035`
-* `python3 scripts/fire_calculator.py bridge --retire-age 50 --spend 40000`
-* `python3 scripts/fire_calculator.py tax --gross 10000 --bracket higher`
-* `python3 scripts/fire_calculator.py death-tax --pot 500000`
-* `python3 scripts/fire_calculator.py contrib-test --relief 0.40 --marginal-out 0.20`
-* `python3 scripts/fire_calculator.py survivor --spend 50000 --sp1 11500 --sp2 11500`
-* `python3 scripts/fire_calculator.py india-tax --gross 2200000 --rent 420000 --basic 1100000 --metro --sec-80c 150000`
-* `python3 scripts/fire_calculator.py india-fire --age 32 --retire-age 47 --monthly-spend 75000 --portfolio 2500000`
-* `python3 scripts/fire_calculator.py loan-prepay --principal 5000000 --rate 8.75 --tenure 20 --extra-monthly 10000`
-* `python3 scripts/fire_calculator.py mhs --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 27000000`
-* `python3 scripts/fire_calculator.py asset-compare --tax-bracket 30`
-* `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000`
-* `python3 scripts/fire_calculator.py crypto-tax --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000`
-* `python3 scripts/fire_calculator.py crypto-tax --jurisdiction uk --gain 15000 --loss 4000 --bracket higher`
-* `python3 scripts/fire_calculator.py cross-border --uk-pension 40000 --india-nro 500000 --rate 105 --has-trc`
-* `python3 scripts/fire_calculator.py profile-template --jurisdiction india --output /path/to/profile.json`
-* `python3 scripts/fire_calculator.py profile-show --file /path/to/profile.json`
-* `python3 scripts/fire_calculator.py profile-list --dir /path/to/profiles_dir/`
-* `python3 scripts/fire_calculator.py profile-eval --file /path/to/profile.json`
+All quantitative advisory models are backed by [`scripts/fire_calculator.py`](scripts/fire_calculator.py). The advisor must execute the relevant subcommand, extract the returned JSON values, and directly incorporate them into advice according to this strict utilization contract:
+
+### 1. Full CLI Subcommand Catalog
+
+| Subcommand | Purpose & Invocation | Primary Output Fields Utilized by Advisor |
+| :--- | :--- | :--- |
+| `target` | `python3 scripts/fire_calculator.py target --spend 40000 --swr 0.035` | `fire_target`, `fire_target_post_state_pension`: Quotes exact required corpus. |
+| `date` | `python3 scripts/fire_calculator.py date --age 32 --nw 150000 --savings 30000 --spend 40000` | `years_to_fi`, `projected_retirement_age`, `portfolio_at_fi`: Quotes exact retirement timeline. |
+| `bridge` | `python3 scripts/fire_calculator.py bridge --retire-age 50 --spend 40000 --nmpa 57` | `bridge_years`, `bucket_1_cash_buffer (0-2 yrs)`, `bucket_2_isa_investments (3+ yrs)`: Sizes liquid pre-57 bridge. |
+| `tax` | `python3 scripts/fire_calculator.py tax --gross 10000 --bracket higher` | `isa_value_after_20_years`, `pension_net_value_after_20_years`, `pension_wealth_advantage_percent`: Quantifies wrapper advantage. |
+| `mortgage` | `python3 scripts/fire_calculator.py mortgage --rate 4.5 --gross 10000 --bracket higher` | `guaranteed_annual_mortgage_interest_saved`, `expected_pension_annual_net_growth`, `recommendation`: Compares debt vs. investing. |
+| `stress` | `python3 scripts/fire_calculator.py stress --portfolio 1000000 --spend 40000` | `portfolio_saved_by_cash_buffer_after_5_years`, `policy_a_trajectory`, `policy_b_trajectory`: Quantifies 2-year cash buffer protection. |
+| `household` | `python3 scripts/fire_calculator.py household --drawdown 50000` | `unequal_total_tax`, `equalized_total_tax`, `annual_tax_saved_by_equalizing`: Recommends spousal pot equalization. |
+| `death-tax` | `python3 scripts/fire_calculator.py death-tax --pot 500000 --estate 1200000` | `effective_iht_rate_on_pension`, `beneficiary_income_tax_rate`, `net_bequest_to_heir`, `optimal_strategy`: Recommends scenario decumulation. |
+| `contrib-test`| `python3 scripts/fire_calculator.py contrib-test --relief 0.20 --marginal-out 0.20 --non-earner` | `spousal_non_earner_assessment`, `effective_net_return_percent` (+25%), `general_verdict`: Evaluates personal allowance arbitrage. |
+| `survivor` | `python3 scripts/fire_calculator.py survivor --spend 50000 --sp1 11500 --sp2 11500` | `survivor_annual_spend (85% baseline)`, `lost_state_pension_annual`, `net_drawdown_change_for_survivor`: Sizes survivor protection gap. |
+| `india-tax` | `python3 scripts/fire_calculator.py india-tax --gross 2200000 --rent 420000 --basic 1100000 --metro --sec-80c 150000` | `recommended_regime`, `annual_tax_saving`, `ctc_breakdown`, `marginal_relief_87a`: Distinguishes CTC and guides regime choice. |
+| `india-fire` | `python3 scripts/fire_calculator.py india-fire --age 32 --retire-age 47 --monthly-spend 75000 --portfolio 2500000` | `future_annual_expenses_at_retirement`, `target_fire_corpus`, `corpus_in_crores`, `required_monthly_sip`: Sizes Indian FIRE targets. |
+| `loan-prepay` | `python3 scripts/fire_calculator.py loan-prepay --principal 5000000 --rate 8.75 --tenure 20 --extra-monthly 10000` | `monthly_emi`, `revised_tenure_years`, `months_saved`, `total_interest_saved`: Guides loan prepayment. |
+| `mhs` | `python3 scripts/fire_calculator.py mhs --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 27000000` | `total_mhs_score`, `rating`, `dimension_scores`, `diagnostics`: Gates equity investing behind protection moats. |
+| `asset-compare`| `python3 scripts/fire_calculator.py asset-compare --tax-bracket 30` | `asset_comparison`, `investor_tax_bracket`, `key_takeaways`: Steers clients away from FD negative real returns. |
+| `real-estate-eval`| `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000` | `comparison_result`, `scenario_renter_investor`, `excess_capital_locked_in_property`: Proves Buy vs Rent capital efficiency. |
+| `crypto-tax` | `python3 scripts/fire_calculator.py crypto-tax --jurisdiction india --gain 1000000 --loss 400000 --transfer-value 1000000` | `statutory_tax_owed`, `gross_crypto_gains`, `tds_deducted_at_source_sec_194s (1 percent)`: Explains gross token tax under Sec 115BBH & 194S. |
+| `cross-border`| `python3 scripts/fire_calculator.py cross-border --uk-pension 40000 --india-nro 500000 --rate 105 --has-trc` | `currency_ppp_projection`, `nre_nro_banking_tax`, `pension_dtaa_assessment`, `double_tax_relief_ftc`: Guides DTAA & Form 67. |
+| `profile-template`| `python3 scripts/fire_calculator.py profile-template --jurisdiction india --output ./profiles/client.json` | `status`, `file_path`: Creates client profile schema locally. |
+| `profile-show`| `python3 scripts/fire_calculator.py profile-show --file ./profiles/test_india_client.json` | `profile_name`, `assets`, `protection`: Loads and verifies client parameters. |
+| `profile-list`| `python3 scripts/fire_calculator.py profile-list --dir ./profiles/` | `profiles_found`, `profiles`: Discovers all locally saved profiles. |
+| `profile-eval`| `python3 scripts/fire_calculator.py profile-eval --file ./profiles/test_india_client.json` | `balance_sheet_summary`, `fire_target_and_gap_analysis`, `asset_tracking_source_ledger`, `money_health_diagnostic`: Full portfolio diagnostic. |
+
+### 2. How the Advisor Ingests and Applies CLI Outputs
+1. **Never Eyeball Figures**: Whenever stating a figure (e.g. required corpus, tax saved, bequest value, or monthly SIP), the advisor must quote the exact numerical value computed by the CLI.
+2. **Reconciliation Quotes**: When discussing salary or CTC, the advisor explicitly quotes `ctc_breakdown["gross_taxable_salary"]` and `ctc_breakdown["employer_epf_contribution (exempt)"]` to explain why the full CTC is not taxable.
+3. **Protection Gate Enforcement**: The advisor inspects `mhs["emergency_score"]` and `mhs["insurance_score"]`. If either is $< 100$, the advisor refuses to allocate 100% of investable surplus to equity until the shield is funded.
+4. **Bequeathal Tax Quotes**: In post-April 2027 scenarios, the advisor must quote `net_bequest_to_heir` and `combined_effective_tax_drag_percent` for both Path A (pension preservation) and Path B (reinvesting/gifting) before declaring an optimal strategy.
 
 ---
 
 ## Part E: Local Client Profile Storage & Private Asset Management
 
-*(Refer to [`references/local_profile_storage.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/references/local_profile_storage.md))*
+*(Refer to [`references/local_profile_storage.md`](references/local_profile_storage.md))*
 * **Strict Local Storage Invariant**: Asset balances, liabilities, income, and personal details must be stored locally in a directory chosen by the user (`--dir`, `--file`, `.fire_advisor_config.json`, or `FIRE_PROFILES_DIR`). Zero cloud upload.
 * **Unified Asset Schema**: Encapsulates Cash & Emergency (FDs, Arbitrage), Equities (Index funds, Flexicap, ISAs, GIAs), Pensions (SIPP, DC, EPF, PPF, NPS), Precious Metals (Gold SGB, Silver), Real Estate (Self-occupied vs REITs), Digital Assets (Bitcoin, ETH), Liabilities (Home loans, Mortgages), and Protection (Term cover, Health insurance).
 * **Automatic Portfolio Diagnostics**: When `profile-eval` runs on a profile, it instantly computes:

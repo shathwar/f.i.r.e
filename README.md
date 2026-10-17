@@ -45,7 +45,7 @@ This workspace contains two specialized, complementary financial advisory skills
 .agents/skills/
 ├── fire-advisor/                   # Strategic F.I.R.E. Planning & Wealth Architecture
 │   ├── SKILL.md                    # Primary advisory prompt, CFP persona & runbooks
-│   ├── VERSION                     # 1.7.0
+│   ├── VERSION                     # 1.7.1
 │   ├── CHANGELOG.md                # Semantic version changelog
 │   ├── references/
 │   │   ├── uk_tax_wrappers.md      # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
@@ -139,15 +139,15 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py cross-border \
 
 # 14. Generate blank profile template in your chosen directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-template \
-  --jurisdiction india --output /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+  --jurisdiction india --output ./profiles/anita.json
 
 # 15. List profiles in your chosen directory
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-list \
-  --dir /Users/Sumanth/Documents/MyFIREProfiles/
+  --dir ./profiles/
 
 # 16. Run full F.I.R.E. evaluation & Money Health Score on a stored profile
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py profile-eval \
-  --file /Users/Sumanth/Documents/MyFIREProfiles/anita.json
+  --file ./profiles/test_india_client.json
 ```
 
 ---

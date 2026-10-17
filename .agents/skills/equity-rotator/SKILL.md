@@ -54,7 +54,7 @@ When advising on equity portfolio rotation, verify your response provides:
 
 ## 1. The 4-Quadrant Macro Regime Matrix
 
-*(Refer to [`references/macro_regimes_and_business_cycle.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/equity-rotator/references/macro_regimes_and_business_cycle.md))*
+*(Refer to [`references/macro_regimes_and_business_cycle.md`](references/macro_regimes_and_business_cycle.md))*
 
 * **Quadrant 1 (Early Cycle - Growth Accelerating, Rates Falling)**:
   * *Playbook*: Overweight Banking & Financials, Auto, Consumer Discretionary, Quality Smallcaps. Underweight FMCG, Pharma.
@@ -69,7 +69,7 @@ When advising on equity portfolio rotation, verify your response provides:
 
 ## 2. Institutional Derivative & Sentiment Triggers (3–5 Days Ahead)
 
-*(Refer to [`references/evidence_indicators_and_sentiment.md`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/equity-rotator/references/evidence_indicators_and_sentiment.md))*
+*(Refer to [`references/evidence_indicators_and_sentiment.md`](references/evidence_indicators_and_sentiment.md))*
 
 * **FII Index Futures Long/Short Ratio**:
   * **$< 18\%$ (Extreme Oversold)**: Imminent short squeeze within 48–72 hours. Rotate tactically into high-beta Private Banks and beat-down index heavyweights.
@@ -84,24 +84,18 @@ When advising on equity portfolio rotation, verify your response provides:
 
 ---
 
-## 3. Quantitative CLI Tool Reference
+## 3. Quantitative CLI Tool Reference & Output Utilization Contract
 
-All quantitative rotation models are backed by [`scripts/rotation_engine.py`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/equity-rotator/scripts/rotation_engine.py):
+All quantitative rotation models are backed by [`scripts/rotation_engine.py`](scripts/rotation_engine.py):
 
-```bash
-# 1. Full 5-Factor Composite Sector Rotation Analysis (India)
-python3 .agents/skills/equity-rotator/scripts/rotation_engine.py analyze \
-  --market india --growth accelerating --inflation falling --fii-long-short 0.16 --pcr 1.10
+| Command | Invocation | Primary Output Fields Utilized by Advisor |
+| :--- | :--- | :--- |
+| `analyze` | `python3 scripts/rotation_engine.py analyze --market india --growth accelerating --inflation falling --fii-long-short 0.16 --pcr 1.10` | `macro_regime`, `sentiment_posture`, `sector_allocation_scorecard`, `style_and_market_cap_tilt`, `tax_smart_execution_strategy`: Full rotation briefing. |
+| `regime` | `python3 scripts/rotation_engine.py regime --growth accelerating --inflation falling` | `macro_quadrant`, `sector_tilts_india`, `sector_tilts_global`: Maps macro cycle to sector overweights. |
+| `sentiment-check` | `python3 scripts/rotation_engine.py sentiment-check --fii-long-short 0.15 --pcr 1.45 --vix 16.2` | `fii_index_futures_status`, `put_call_ratio_status`, `institutional_sentiment_bias`: Identifies 3–5 day contrarian turning points. |
+| `spread-check` | `python3 scripts/rotation_engine.py spread-check --small-large-pe 1.28 --breadth-50dma 42.0 --yield-gap 2.70` | `smallcap_froth_status`, `market_breadth_status`, `yield_gap_equity_risk_premium`: Triggers smallcap trimming alerts and breadth warnings. |
 
-# 2. Evaluate Macro Regime & Business Cycle Sector Mapping
-python3 .agents/skills/equity-rotator/scripts/rotation_engine.py regime \
-  --growth accelerating --inflation falling
-
-# 3. Smart Money Contrarian Sentiment Diagnostic
-python3 .agents/skills/equity-rotator/scripts/rotation_engine.py sentiment-check \
-  --fii-long-short 0.15 --pcr 1.45 --vix 16.2
-
-# 4. Smallcap Valuation Froth & Yield Gap Check
-python3 .agents/skills/equity-rotator/scripts/rotation_engine.py spread-check \
-  --small-large-pe 1.28 --breadth-50dma 42.0 --yield-gap 2.70
-```
+### How the Advisor Ingests and Applies Engine Outputs
+1. **Contrarian Execution**: When `fii_index_futures_status` returns extreme oversold ($< 18\%$), the advisor prescribes an immediate 3–5 day tactical reallocation rather than passive waiting.
+2. **Smallcap Rebalancing**: When `smallcap_froth_status` triggers an alert ($> 1.25\times$), the advisor directs trimming 25%–35% of smallcaps into large/flexicap funds.
+3. **Tax-Sheltered Execution**: The advisor incorporates `tax_smart_execution_strategy` (using Dynamic Asset Allocation / Balanced Advantage Funds in India or Stocks & Shares ISAs in the UK) to prevent unwanted capital gains tax drag during tactical sector shifts.

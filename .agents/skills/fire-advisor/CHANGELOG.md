@@ -1,5 +1,18 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.7.1] - 2026-10-17
+
+### Skill Portability & Automated CLI Output Audit:
+- **Repository-Relative Path Portability**:
+  - Replaced all hardcoded absolute local paths (`file:///Users/Sumanth/...`) with portable repository-relative links across `SKILL.md` files and reference documentation (`references/...`, `scripts/...`).
+  - Replaced user-specific local profile paths with clean, portable paths (`./profiles/test_india_client.json`).
+- **Comprehensive CLI Verification & Output Audit (`tests/test_cli_commands.py`)**:
+  - Added automated test suite executing all 22 advertised subcommands in `fire_calculator.py` and all 4 subcommands in `rotation_engine.py`.
+  - Asserts that every command terminates cleanly with exit code 0 and outputs valid JSON containing all expected fields.
+- **Advisory Output Utilization Contract**:
+  - Embedded an explicit Command-to-Advisory Output Mapping table into `SKILL.md` Part D.
+  - Formally documents how each CLI output field is ingested and quoted by the advisor (e.g. `ctc_breakdown` for salary reconciliation, `net_bequest_to_heir` for April 2027 decumulation, `mhs` dimension scores for protection gating).
+
 ## [1.7.0] - 2026-10-17
 
 ### Added Independent Mathematical Proof Test Suite & Cross-Border DTAA Engine:
