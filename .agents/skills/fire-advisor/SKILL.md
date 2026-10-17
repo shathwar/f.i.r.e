@@ -86,7 +86,17 @@ When advising a client, ensure the response covers:
 * With home loan rates at 8.5%–9.0%, prepaying provides a guaranteed, risk-free after-tax return that rivals equity risk premiums (12% CAGR minus 12.5% LTCG = ~10.5% net).
 * Propose the **1 Extra EMI / Year** or 5% annual EMI step-up strategy to cut 20-year tenures down to 12–13 years and save ₹20L+ in interest.
 
-### 5. Money Health Score (MHS) Diagnostic (0–100)
+### 5. Traditional & Tangible Assets: FDs, Gold, Silver & Real Estate
+* **Fixed Deposits (FDs)**: 6.75%–7.5% headline yield turns into **4.99% post-tax in the 30% slab (-1.5% negative real return vs 6.5% inflation)**. Never use FDs for retirement wealth accumulation; restrict to the 6-month Emergency Shield. Use **Arbitrage Mutual Funds** (12.5% LTCG, ~6.1% net) for surplus cash buffers.
+* **Gold**: INR returns compound at ~9%–10% CAGR (USD gold + ~3.5% INR depreciation). Prefer **Sovereign Gold Bonds (SGB)** (2.5% coupon + **100% tax-free capital gains** at 8-yr RBI maturity) or Gold ETFs (12.5% LTCG after 24m). Target 5%–10% allocation.
+* **Silver**: High-beta industrial precious metal (55%+ industrial demand). 12.5% LTCG after 24 months. Cap at 2%–5% tactical allocation.
+* **Real Estate**:
+  * Residential gross yield in metros is **2.0%–2.8%** (net 1.8%–2.2%). Generating ₹1L/month in rental cash flow requires **~₹5.5 Crores in property vs. ₹3.6 Crores in a 3.3% SWR financial portfolio** (locking up ₹1.8 Cr excess capital).
+  * In the **Buy vs. Rent** equation, borrowing at 8.75% to buy a property yielding 2.5% severely lags renting and investing the upfront down payment + EMI surplus into an equity SIP.
+  * For real estate income, prefer **Listed REITs** (6.5%–7.8% distribution yield, liquid, no tenant hassle).
+  * Post-Budget 2024 taxation: 12.5% without indexation (pre-July 2024 purchases retain grandfathered option of 20% with indexation).
+
+### 6. Money Health Score (MHS) Diagnostic (0–100)
 Run the 6-dimension diagnostic before recommending equity expansion:
 * **Emergency Shield (20%)**: 6 months of expenses + EMIs in liquid funds.
 * **Insurance Moat (25%)**: 15x–20x annual income in pure term cover + health insurance.
@@ -102,3 +112,21 @@ When advising NRIs (e.g. UK residents planning return to India, or Indian reside
 * **Currency Hedging & Remittance**: Pound sterling (£) has historically appreciated against the Indian Rupee (INR) by ~3%–4% annually, compensating for Indian inflation differentials.
 * **Accounts & Taxation**: NRE (tax-free in India, fully repatriable) vs. NRO (taxable in India, restricted repatriation) accounts.
 * **DTAA (Double Tax Avoidance Agreement)**: Ensure foreign tax credits are claimed on UK pensions/dividends remitted to India or vice versa.
+
+---
+
+## Part D: Deterministic CLI Tool Reference
+
+All quantitative advisory models are backed by [`scripts/fire_calculator.py`](file:///Users/Sumanth/Documents/Projects/FireAdvisor/.agents/skills/fire-advisor/scripts/fire_calculator.py):
+* `python3 scripts/fire_calculator.py target --spend 40000 --swr 0.035`
+* `python3 scripts/fire_calculator.py bridge --retire-age 50 --spend 40000`
+* `python3 scripts/fire_calculator.py tax --gross 10000 --bracket higher`
+* `python3 scripts/fire_calculator.py death-tax --pot 500000`
+* `python3 scripts/fire_calculator.py contrib-test --relief 0.40 --marginal-out 0.20`
+* `python3 scripts/fire_calculator.py survivor --spend 50000 --sp1 11500 --sp2 11500`
+* `python3 scripts/fire_calculator.py india-tax --gross 2200000 --rent 420000 --basic 1100000 --metro --sec-80c 150000`
+* `python3 scripts/fire_calculator.py india-fire --age 32 --retire-age 47 --monthly-spend 75000 --portfolio 2500000`
+* `python3 scripts/fire_calculator.py loan-prepay --principal 5000000 --rate 8.75 --tenure 20 --extra-monthly 10000`
+* `python3 scripts/fire_calculator.py mhs --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 27000000`
+* `python3 scripts/fire_calculator.py asset-compare --tax-bracket 30`
+* `python3 scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000`

@@ -144,6 +144,30 @@
         "Calculates Debt FOIR = 23.3% (healthy, < 30%)",
         "Computes Money Health Score across the 6 dimensions and provides a prioritized action plan"
       ]
+    },
+    {
+      "id": "eval_13_india_traditional_assets_fd_gold_silver",
+      "capability": "India Asset Optimization: FD, Arbitrage, Gold, Silver",
+      "jurisdiction": "India",
+      "prompt": "I am in the 30% tax bracket in India. I have ₹20 Lakhs in Bank Fixed Deposits at 7.25%, and I am thinking of adding Gold and Silver. How do these assets compare after tax and inflation?",
+      "expected_criteria": [
+        "Exposes the FD inflation trap: 7.25% at 31.2% tax yields 4.99% post-tax, generating -1.5% negative real return against 6.5% inflation",
+        "Recommends Arbitrage Mutual Funds as a superior tax-efficient cash parking tool (taxed at 12.5% LTCG yielding ~6.1% post-tax)",
+        "Distinguishes Sovereign Gold Bonds (SGB) with 100% tax-free capital gains at RBI maturity vs Gold/Silver ETFs (12.5% LTCG after 24m)",
+        "Recommends 5%-10% Gold allocation as a currency depreciation hedge and 2%-5% max for volatile Silver"
+      ]
+    },
+    {
+      "id": "eval_14_india_real_estate_buy_vs_rent",
+      "capability": "India Real Estate: Rental Yield vs Buy vs Rent",
+      "jurisdiction": "India",
+      "prompt": "I am considering buying an apartment in Bengaluru for ₹1.5 Crores (EMI ~₹1.06L/mo at 8.75%) vs renting an identical flat for ₹35,000/month and investing the rest in equity. What does the FIRE math say?",
+      "expected_criteria": [
+        "Calculates gross rental yield (~2.8%) and net rental yield (~2.0% - 2.2% after maintenance, taxes, and vacancy)",
+        "Shows capital requirement disparity: generating ₹1L/month rental income requires ~₹5.5 Crores in property vs ~₹3.6 Crores in a 3.3% SWR financial portfolio",
+        "Models 20-year buy vs rent outcome showing substantial net alpha (~₹4+ Crores) in favor of renting and investing upfront capital + monthly EMI surplus into equity",
+        "Mentions post-Budget 2024 Section 112 tax rules (12.5% without indexation vs 20% grandfathered with indexation for pre-July 2024 purchases)"
+      ]
     }
   ]
 }

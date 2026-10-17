@@ -22,6 +22,9 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 * **Loan Prepayment vs. Equity SIP**: Reducing-balance monthly compounding EMI simulator; shows tenure reduction and lakhs saved in interest.
 * **The Protection-First Rule**: Enforces the Arth Protocol—never prescribes aggressive equity SIPs without a 6-month Emergency Shield and 15x–20x Pure Term Life Insurance.
 * **Money Health Score (MHS)**: 6-dimension diagnostic (0–100) assessing Emergency, Insurance, Debt/FOIR, Investment, and Savings discipline.
+* **Fixed Deposits (FDs) vs. Arbitrage Funds**: Exposes the FD inflation trap (4.99% post-tax in 30% slab vs 6.5% inflation = -1.5% negative real return); positions Arbitrage Funds (12.5% LTCG) as the tax-efficient cash parking alternative.
+* **Gold & Silver**: Sovereign Gold Bonds (SGB) with 2.5% coupon + 100% tax-free capital gains at RBI maturity vs. Gold/Silver ETFs (12.5% LTCG after 24m). Sizing: 5%–10% Gold, 2%–5% Silver.
+* **Real Estate & Buy vs. Rent**: 2.0%–2.8% gross rental yields vs. financial portfolio SWR (saving ~₹1.8 Cr in required capital); 20-year Buy vs. Rent simulator; listed REITs (6.5%–7.8% yield); post-Budget 2024 Section 112 tax rules.
 
 ---
 
@@ -30,19 +33,19 @@ Combines the rigorous decumulation, IHT, and Monte Carlo planning frameworks fro
 ```text
 .agents/skills/fire-advisor/
 ├── SKILL.md                 # Primary advisory prompt, CFP persona, contracts & capability runbooks
-├── VERSION                  # 1.2.0
+├── VERSION                  # 1.3.0
 ├── CHANGELOG.md             # Semantic version changelog
 ├── references/
 │   ├── uk_tax_wrappers.md   # SIPP, Salary Sacrifice, 60% trap, April 2027 IHT & r > 0.75m law
 │   ├── pension_bridge_and_sorr.md # Pre-57 bridge, multi-bucket design, 30% crash & care costs
 │   ├── mortgage_vs_investing.md   # Mathematical models comparing mortgage paydown vs. investing
 │   ├── household_optimization.md  # Spousal allowances, equalizing pots, survivor shock & transfers
-│   ├── india_investments_and_tax.md # MFs, EPF, PPF, NPS, Old vs New Regime, HRA, 6.5% inflation
+│   ├── india_investments_and_tax.md # MFs, FDs, Gold, Silver, Real Estate, REITs, Old vs New, HRA
 │   └── financial_health_and_protection.md # Money Health Score (MHS), Arth Protocol & protection moats
 ├── scripts/
 │   └── fire_calculator.py   # Multi-jurisdiction CLI calculation engine (UK & India)
 └── evals/
-    └── eval_cases.json      # Comprehensive evaluation suite (12 test scenarios across UK & India)
+    └── eval_cases.json      # Comprehensive evaluation suite (14 test scenarios across UK & India)
 ```
 
 ---
@@ -85,4 +88,10 @@ python3 .agents/skills/fire-advisor/scripts/fire_calculator.py loan-prepay \
 # 8. Money Health Score Diagnostic (0-100)
 python3 .agents/skills/fire-advisor/scripts/fire_calculator.py mhs \
   --income 150000 --expenses 60000 --emi 35000 --liquid 600000 --term-cover 25000000 --age 32
+
+# 9. India Asset Class Post-Tax Real Return Comparison (30% slab vs 6.5% inflation)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py asset-compare --tax-bracket 30
+
+# 10. Buy vs. Rent & Real Estate Capital Efficiency (₹1.5 Cr property vs ₹35k/mo rent)
+python3 .agents/skills/fire-advisor/scripts/fire_calculator.py real-estate-eval --price 15000000 --rent 35000
 ```

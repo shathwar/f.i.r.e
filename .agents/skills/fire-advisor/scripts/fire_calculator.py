@@ -557,6 +557,175 @@ def calculate_money_health_score(monthly_income: float, monthly_expenses: float,
     }
 
 
+def calculate_india_asset_returns(tax_bracket: str = "30", inflation: float = 0.065) -> Dict[str, Any]:
+    """Compares post-tax nominal and real returns across core Indian asset classes."""
+    slab_rates = {
+        "30": 0.312,
+        "20": 0.208,
+        "15": 0.156,
+        "10": 0.104,
+        "5": 0.052,
+        "0": 0.0
+    }
+    marginal_tax = slab_rates.get(str(tax_bracket), 0.312)
+
+    assets = [
+        {
+            "asset": "Bank Fixed Deposit (1-3 Year)",
+            "nominal_cagr_pct": 7.25,
+            "tax_treatment": f"Taxed at slab ({round(marginal_tax*100, 1)} percent)",
+            "post_tax_cagr_pct": round(7.25 * (1.0 - marginal_tax), 2),
+            "role_in_fire": "Emergency buffer only (0-2 yrs). Wealth destroyer vs inflation."
+        },
+        {
+            "asset": "Arbitrage Mutual Fund",
+            "nominal_cagr_pct": 7.00,
+            "tax_treatment": "12.5 percent LTCG after 12 months",
+            "post_tax_cagr_pct": round(7.00 * (1.0 - 0.125), 2),
+            "role_in_fire": "Superior cash/parking alternative to FDs for high-earning investors."
+        },
+        {
+            "asset": "Equity Mutual Funds (Nifty / Flexicap)",
+            "nominal_cagr_pct": 12.00,
+            "tax_treatment": "12.5 percent LTCG above ₹1.25L exemption",
+            "post_tax_cagr_pct": round(12.00 * (1.0 - 0.125), 2),
+            "role_in_fire": "Core growth engine (50-70 percent allocation)."
+        },
+        {
+            "asset": "Sovereign Gold Bond (SGB - RBI Maturity)",
+            "nominal_cagr_pct": 10.00,
+            "tax_treatment": "Capital gains 100 percent tax-free at 8y maturity; 2.5 percent coupon taxed at slab",
+            "post_tax_cagr_pct": round(7.50 + (2.50 * (1.0 - marginal_tax)), 2),
+            "role_in_fire": "Currency depreciation hedge (5-10 percent allocation)."
+        },
+        {
+            "asset": "Gold ETF / Physical Bullion",
+            "nominal_cagr_pct": 9.50,
+            "tax_treatment": "12.5 percent LTCG after 24 months (Post-Budget 2024)",
+            "post_tax_cagr_pct": round(9.50 * (1.0 - 0.125), 2),
+            "role_in_fire": "Liquid precious metals hedge without SGB lock-in."
+        },
+        {
+            "asset": "Silver ETF",
+            "nominal_cagr_pct": 11.00,
+            "tax_treatment": "12.5 percent LTCG after 24 months (Post-Budget 2024)",
+            "post_tax_cagr_pct": round(11.00 * (1.0 - 0.125), 2),
+            "role_in_fire": "High-beta industrial commodity hedge (2-5 percent allocation)."
+        },
+        {
+            "asset": "Residential Real Estate (Rental)",
+            "nominal_cagr_pct": 7.30,
+            "tax_treatment": "Net rent taxed at slab; 12.5 percent LTCG on exit (post-July 2024)",
+            "post_tax_cagr_pct": round((1.8 * (1.0 - marginal_tax)) + (5.5 * (1.0 - 0.125)), 2),
+            "role_in_fire": "Low net yield (1.8-2.2 percent). Sub-optimal for cash flow retirement."
+        },
+        {
+            "asset": "Listed REITs (Commercial / Retail)",
+            "nominal_cagr_pct": 10.50,
+            "tax_treatment": "Blended distribution tax (~20 percent effective) + 12.5 percent LTCG on units",
+            "post_tax_cagr_pct": round((7.2 * 0.80) + (3.3 * (1.0 - 0.125)), 2),
+            "role_in_fire": "Fractional liquid commercial real estate income stream."
+        }
+    ]
+
+    for a in assets:
+        post_tax = a["post_tax_cagr_pct"] / 100.0
+        real_ret = ((1.0 + post_tax) / (1.0 + inflation)) - 1.0
+        a["real_return_pct"] = round(real_ret * 100.0, 2)
+        a["net_annual_alpha_vs_inflation_pct"] = round((post_tax - inflation) * 100.0, 2)
+
+    return {
+        "investor_tax_bracket": tax_bracket,
+        "assumed_inflation_pct": round(inflation * 100.0, 2),
+        "asset_comparison": assets,
+        "key_takeaways": [
+            "Fixed Deposits guarantee a NEGATIVE real return (-1.5 percent) in high tax brackets; use Arbitrage Funds instead for cash buffers.",
+            "Gold SGB delivers the highest post-tax risk-adjusted return among debt/hedges due to 100 percent tax-free capital gains on maturity.",
+            "Residential real estate rental yield (1.8-2.2 percent net) locks up ~50 percent more capital than an equity/REIT financial independence portfolio."
+        ]
+    }
+
+
+def calculate_buy_vs_rent_real_estate(property_price: float, monthly_rent: float,
+                                      loan_rate: float = 0.0875, tenure_years: int = 20,
+                                      equity_cagr: float = 0.12, prop_cagr: float = 0.06,
+                                      rent_inflation: float = 0.05) -> Dict[str, Any]:
+    """Evaluates the financial outcome of buying a property vs renting and investing the difference."""
+    down_payment = property_price * 0.20
+    stamp_duty = property_price * 0.07
+    total_upfront = down_payment + stamp_duty
+    loan_amount = property_price * 0.80
+
+    r_m = loan_rate / 12.0
+    n = tenure_years * 12
+    if r_m > 0:
+        emi = loan_amount * (r_m * (1.0 + r_m)**n) / ((1.0 + r_m)**n - 1.0)
+    else:
+        emi = loan_amount / n
+
+    monthly_maintenance = (property_price * 0.005) / 12.0
+    initial_ownership_cost = emi + monthly_maintenance
+
+    future_property_value = property_price * ((1.0 + prop_cagr) ** tenure_years)
+    fv_upfront = total_upfront * ((1.0 + equity_cagr) ** tenure_years)
+
+    monthly_equity_r = (1.0 + equity_cagr) ** (1.0 / 12.0) - 1.0
+    current_rent = monthly_rent
+    accumulated_sip_wealth = 0.0
+
+    total_rent_paid = 0.0
+    total_emi_paid = emi * n
+
+    for month in range(1, n + 1):
+        if month > 1 and month % 12 == 1:
+            current_rent *= (1.0 + rent_inflation)
+        total_rent_paid += current_rent
+        surplus = initial_ownership_cost - current_rent
+        if surplus > 0:
+            accumulated_sip_wealth = (accumulated_sip_wealth + surplus) * (1.0 + monthly_equity_r)
+        else:
+            accumulated_sip_wealth = accumulated_sip_wealth * (1.0 + monthly_equity_r)
+
+    total_renter_wealth = fv_upfront + accumulated_sip_wealth
+    renter_advantage = total_renter_wealth - future_property_value
+
+    capital_needed_real_estate = (100000.0 * 12.0) / 0.022
+    capital_needed_fire_portfolio = (100000.0 * 12.0) / 0.033
+
+    return {
+        "property_price": property_price,
+        "monthly_rent": monthly_rent,
+        "loan_parameters": {
+            "loan_amount": round(loan_amount, 2),
+            "interest_rate_percent": loan_rate * 100,
+            "tenure_years": tenure_years,
+            "monthly_emi": round(emi, 2),
+            "upfront_cash_required (down payment and stamp duty)": round(total_upfront, 2),
+            "total_emi_paid": round(total_emi_paid, 2)
+        },
+        "scenario_buyer": {
+            "property_value_after_tenure": round(future_property_value, 2),
+            "total_outflow (upfront and emi and maintenance)": round(total_upfront + total_emi_paid + (monthly_maintenance * n), 2),
+            "net_equity_value": round(future_property_value, 2)
+        },
+        "scenario_renter_investor": {
+            "upfront_capital_invested_fv": round(fv_upfront, 2),
+            "monthly_surplus_sip_accumulated": round(accumulated_sip_wealth, 2),
+            "total_financial_portfolio": round(total_renter_wealth, 2),
+            "total_rent_paid": round(total_rent_paid, 2)
+        },
+        "comparison_result": {
+            "renter_financial_advantage": round(renter_advantage, 2),
+            "verdict": "Renting and investing surplus generates substantial alpha" if renter_advantage > 0 else "Buying beats renting under these parameters"
+        },
+        "retirement_income_capital_efficiency (for 1L/month cash flow)": {
+            "capital_needed_via_real_estate_rental (2.2 percent net yield)": round(capital_needed_real_estate, 2),
+            "capital_needed_via_fire_portfolio (3.3 percent SWR)": round(capital_needed_fire_portfolio, 2),
+            "excess_capital_locked_in_property": round(capital_needed_real_estate - capital_needed_fire_portfolio, 2)
+        }
+    }
+
+
 # ==============================================================================
 # MAIN CLI DISPATCHER
 # ==============================================================================
@@ -665,6 +834,20 @@ def main():
     p_mhs.add_argument("--equity-pct", type=float, default=70.0, help="Current portfolio equity percent")
     p_mhs.add_argument("--credit-card-debt", action="store_true", help="Set if revolving unpaid credit card debt")
 
+    # India Asset Compare
+    p_asset = subparsers.add_parser("asset-compare", help="Compare post-tax real returns across Indian asset classes")
+    p_asset.add_argument("--tax-bracket", type=str, default="30", choices=["30", "20", "15", "10", "5", "0"], help="Marginal tax slab (percent)")
+    p_asset.add_argument("--inflation", type=float, default=0.065, help="Assumed inflation (default 0.065)")
+
+    # Real Estate Buy vs Rent Evaluator
+    p_re = subparsers.add_parser("real-estate-eval", help="Evaluate Buy vs Rent and capital efficiency of Real Estate")
+    p_re.add_argument("--price", type=float, required=True, help="Property purchase price (₹)")
+    p_re.add_argument("--rent", type=float, required=True, help="Monthly rent for equivalent property (₹)")
+    p_re.add_argument("--loan-rate", type=float, default=0.0875, help="Home loan interest rate (default 0.0875)")
+    p_re.add_argument("--tenure", type=int, default=20, help="Loan tenure in years (default 20)")
+    p_re.add_argument("--equity-cagr", type=float, default=0.12, help="Expected equity CAGR (default 0.12)")
+    p_re.add_argument("--prop-cagr", type=float, default=0.06, help="Expected property appreciation (default 0.06)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -704,6 +887,11 @@ def main():
         res = calculate_money_health_score(args.income, args.expenses, args.emi, args.liquid,
                                            args.term_cover, not args.no_health_insurance,
                                            args.age, args.equity_pct, args.credit_card_debt)
+    elif args.command == "asset-compare":
+        res = calculate_india_asset_returns(args.tax_bracket, args.inflation)
+    elif args.command == "real-estate-eval":
+        res = calculate_buy_vs_rent_real_estate(args.price, args.rent, args.loan_rate, args.tenure,
+                                                args.equity_cagr, args.prop_cagr)
 
     print(json.dumps(res, indent=2))
 

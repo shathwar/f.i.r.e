@@ -1,5 +1,27 @@
 # Changelog - UK & India F.I.R.E. Advisor Skill
 
+## [1.3.0] - 2026-10-17
+
+### Added Traditional & Tangible Indian Asset Classes:
+- **Bank Fixed Deposits (FDs) vs. Arbitrage Funds**:
+  - Detailed post-tax real return modeling: 7.25% FD at 31.2% tax yields 4.99% net, producing a **-1.5% negative real return** against 6.5% inflation.
+  - Arbitrage Mutual Funds modeled as a tax-efficient parking instrument (12.5% LTCG, ~6.1% net, +1.2% net alpha over FDs).
+- **Gold & Silver Precious Metals Architecture**:
+  - Sovereign Gold Bonds (SGB): 2.5% annual coupon + **100% tax-free capital gains** upon 8-year RBI redemption under Section 47(viic).
+  - Gold & Silver ETFs: Post-Budget 2024 **12.5% LTCG after 24 months** (no indexation).
+  - Asset role sizing: 5%–10% Gold (geopolitical & INR depreciation moat), 2%–5% Silver (high-beta industrial commodity).
+- **Real Estate & Buy vs. Rent Quantitative Modeling**:
+  - Residential Rental Yield Reality: 2.0%–2.8% gross (1.8%–2.2% net after maintenance, property tax, and vacancy).
+  - Real Estate vs. SWR Capital Efficiency: Generating ₹1L/month in rental cash flow requires **₹5.45 Crores in property** vs. **₹3.64 Crores in a 3.3% SWR financial portfolio** (freeing ₹1.82 Crores in capital).
+  - Buy vs. Rent Engine: 20-year cash flow simulation demonstrating the compound wealth creation of investing the down payment and monthly EMI surplus into equity.
+  - Post-Budget 2024 Section 112 Real Estate Tax: 12.5% without indexation (pre-July 2024 purchases retain grandfathered option of 20% with indexation).
+  - Commercial Real Estate & Listed REITs (6.5%–7.8% distribution yield) as fractional liquid real estate exposure.
+- **New CLI Tools in `fire_calculator.py`**:
+  - `asset-compare`: Post-tax nominal and real return ranking across FDs, Arbitrage, Equity, Gold SGB, Gold ETF, Silver ETF, Real Estate, and REITs.
+  - `real-estate-eval`: Detailed Buy vs. Rent calculator and capital requirement comparison.
+- **Evals Updated**:
+  - Added test cases `eval_13` (FD, Arbitrage, Gold, Silver) and `eval_14` (Real Estate Buy vs Rent).
+
 ## [1.2.0] - 2026-10-17
 
 ### Enhanced with core capabilities from `jaineejain/ArthMitra` for India investments:
